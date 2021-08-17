@@ -48,13 +48,13 @@ if __name__ == "__main__":
     main()
 
 
-
-        # image_name = sample["asset"]["name"]
-        # for i, sample_2 in enumerate(json_object["assets"].values(), start=1):
-        #     if video_name == sample_2["asset"]["parent"]["name"] and image_name != sample_2["asset"]["name"]:
-        #         for region in sample_2["regions"]:
-        #             color = color_map[int(region["tags"][0])]
-        #             points: list[dict[str, float]] = region["points"]
-        #             pts = np.asarray([[point["x"], point["y"]] for point in points], dtype=np.int32)
-        #             pts = pts.reshape((-1, 1, 2))
-        #             img = cv2.fillPoly(img, [pts], color)
+# Old code snipet to show the segmentation with OpenCV
+# image_name = sample["asset"]["name"]
+# for i, sample_2 in enumerate(json_object["assets"].values(), start=1):
+#     if video_name == sample_2["asset"]["parent"]["name"] and image_name != sample_2["asset"]["name"]:
+#         for region in sample_2["regions"]:
+#             color = color_map[int(region["tags"][0])]
+#             points: list[dict[str, float]] = region["points"]
+#             pts = np.asarray([[point["x"], point["y"]] for point in points], dtype=np.int32)
+#             pts = pts.reshape((-1, 1, 2))
+#             img = cv2.fillPoly(img, [pts], color)

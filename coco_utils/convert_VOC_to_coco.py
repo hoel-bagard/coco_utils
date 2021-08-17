@@ -10,7 +10,7 @@ import numpy as np
 from coco_types import Image, Annotation, Category
 
 
-def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple(str, int, int, list[str, tuple[int, int, int, int]]):
+def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int, list[str, tuple[int, int, int, int]]]:
     """ Takes a path to an xml file and parses it to return the relevant information.
 
     Args:
@@ -57,7 +57,7 @@ def get_all_classes(xmls_path: list[Path]) -> list[str]:
     Returns:
         List with all the classes
     """
-    classes = {}
+    classes = set()
     for xml_path in xmls_path:
         root: ET.Element = ET.parse(xml_path).getroot()
         objects: ET.Element = root.findall("object")
