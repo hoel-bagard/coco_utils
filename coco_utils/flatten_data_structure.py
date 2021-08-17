@@ -34,31 +34,19 @@ def main():
         print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
 
         file_output_path = img_output_path / img_path.name
+
+        # Check if xml exists
+
+
         if file_output_path.exists():
             print(f"\nFile {file_output_path} already exists. Skipping.")
+
+            # Rename file and modify xml accordingly
 
         if move:
             shutil.move(img_path, file_output_path)
         else:
             shutil.copy(img_path, file_output_path)
-    print("\nFinished copying/moving images.")
-
-    if labels_too:
-        label_paths = list([path for path in data_path.rglob('*') if path.suffix in (".xml", ".json")])
-        nb_label_files = len(label_paths)
-        for i, label_path in enumerate(label_paths, start=1):
-            msg = f"Processing file: {label_path.name} ({i}/{nb_label_files})"
-            print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
-
-            file_output_path = labels_output_path / label_path.name
-            if file_output_path.exists():
-                print(f"\nFile {file_output_path} already exists. Skipping.")
-
-            if move:
-                shutil.move(label_path, file_output_path)
-            else:
-                shutil.copy(label_path, file_output_path)
-        print("\nFinished copying/moving labels.")
 
     print("\nFinished!")
 
