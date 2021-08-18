@@ -23,9 +23,9 @@ def main():
 
     # Output paths are a bit diffenrent if also moving the labels
     if labels_too:
-        img_output_path = img_output_path / "imgs"
         labels_output_path = img_output_path / "labels"
         labels_output_path.mkdir(parents=True, exist_ok=True)
+        img_output_path = img_output_path / "imgs"
     img_output_path.mkdir(parents=True, exist_ok=True)
 
     exts = (".png", ".jpg", ".bmp")
@@ -40,10 +40,11 @@ def main():
         xml_path: Path = None
 
         # Check if xml exists (either next to the image or in an adjacent "labels" folder)
-        if img_path.with_suffix(".xml").exists():
-            xml_path = img_path.with_suffix(".xml")
-        elif (img_path.parent.parent / "labels" / (img_path.stem + ".xml")).exists():
-            xml_path = img_path.parent.parent / "labels" / (img_path.stem + ".xml")
+        if labels_too:
+            if img_path.with_suffix(".xml").exists():
+                xml_path = img_path.with_suffix(".xml")
+            elif (img_path.parent.parent / "labels" / (img_path.stem + ".xml")).exists():
+                xml_path = img_path.parent.parent / "labels" / (img_path.stem + ".xml")
 
         if file_output_path.exists():
             # There is already an image and xml label file with that name. Rename and the move.
