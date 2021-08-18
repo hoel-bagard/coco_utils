@@ -181,7 +181,7 @@ def main():
         "categories": categories
     }
 
-    output_path: Path = args.output_path if args.output_path else args.json_path.parent / "coco_annotations.json"
+    output_path: Path = args.output_path if args.output_path else args.data_path.parent / "coco_annotations.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w') as json_file:
         json.dump(coco_dataset, json_file, indent=4)
