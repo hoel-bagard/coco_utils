@@ -2,28 +2,12 @@ import argparse
 import json
 import shutil
 from pathlib import Path
-from typing import TypedDict
 
-
-class Image(TypedDict):
-    id: int
-    width: int
-    height: int
-    file_name: str
-
-
-class Annotation(TypedDict):
-    id: int
-    image_id: int
-    category_id: int
-    segmentation: list[list[float]]
-    area: float
-    bbox: list[float]
-    iscrowd: int  # Either 1 or 0   (Always 0 in this project)
+from coco_types import Annotation, Image
 
 
 def is_duplicate(list_to_check: list[Image], key: str, elt_id: str) -> bool:
-    """ Checks if the given id is already in the list """
+    """Checks if the given id is already in the list."""
     for entry in list_to_check:
         if entry[key] == elt_id:
             return True
@@ -31,8 +15,8 @@ def is_duplicate(list_to_check: list[Image], key: str, elt_id: str) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser("Changes image ids in a coco dataset from strings to ints."
-                                     "Also removes duplicate entries.")
+    parser = argparse.ArgumentParser(description=("Changes image ids in a coco dataset from strings to ints."
+                                                  "Also removes duplicate entries."))
     parser.add_argument("annotations", type=Path, help="Path to COCO annotations file.")
     args = parser.parse_args()
 

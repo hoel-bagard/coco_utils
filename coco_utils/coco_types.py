@@ -19,7 +19,7 @@ class Annotation(TypedDict):
     # The COCO bounding box format is [top left x position, top left y position, width, height].
     # bbox exemple:  "bbox": [473.07,395.93,38.65,28.67]
     bbox: list[float]
-    iscrowd: int  # Either 1 or 0   (Always 0 in this project)
+    iscrowd: int  # Either 1 or 0
 
 
 class Category(TypedDict):
