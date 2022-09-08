@@ -18,7 +18,7 @@ def main():
     args = parser.parse_args()
 
     # Load the dataset
-    with open(args.annotations) as annotations:
+    with open(args.annotations, encoding="utf-8") as annotations:
         coco_dataset = json.load(annotations)
     images = np.asarray(coco_dataset["images"])
     annotations = coco_dataset["annotations"]
@@ -34,7 +34,7 @@ def main():
         val_images = list(images[indexes[int(number_of_images*args.split):]])
     else:
         val_img_names = []
-        with open(args.spec_file, 'r') as spec_file:
+        with open(args.spec_file, 'r', encoding="utf-8") as spec_file:
             for line in spec_file:
                 val_img_names.append(line.strip())
 
@@ -64,7 +64,7 @@ def main():
     }
     train_output_path: Path = args.output_path / "train"
     train_output_path.mkdir(parents=True, exist_ok=True)
-    with open(train_output_path / "annotations.json", 'w') as json_file:
+    with open(train_output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(train_dataset, json_file, indent=4)
 
     # Save new validation annotations
@@ -75,7 +75,7 @@ def main():
     }
     val_output_path: Path = args.output_path / "validation"
     val_output_path.mkdir(parents=True, exist_ok=True)
-    with open(val_output_path / "annotations.json", 'w') as json_file:
+    with open(val_output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(val_dataset, json_file, indent=4)
 
     print(f"Saved {len(train_images)} entries to {train_output_path} and {len(val_images)} to {val_output_path}")

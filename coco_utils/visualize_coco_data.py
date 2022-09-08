@@ -10,13 +10,14 @@ from pycocotools.coco import COCO
 def main():
     parser = argparse.ArgumentParser(description="Tool to visualize coco labels.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("data_path", type=Path, help="Path to the directory with the images")
-    parser.add_argument("json_path", type=Path, help="Path to the json file with the coco annotations")
-    parser.add_argument("--show_bbox", "--sb", action="store_true", help="Show the bounding boxes")
+    parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
+    parser.add_argument("json_path", type=Path, help="Path to the json file with the coco annotations.")
+    parser.add_argument("--show_bbox", "-sb", action="store_true", help="Show the bounding boxes.")
     args = parser.parse_args()
 
     data_path: Path = args.data_path
     json_path: Path = args.json_path
+    show_bbox: bool = args.show_bbox
 
     coco = COCO(json_path)
 
@@ -33,9 +34,9 @@ def main():
         anns = coco.loadAnns(ann_ids)
 
         # Load an image and its corresponding instance annotations then display it
-        img = cv2.imread(str(args.data_path / img_data["file_name"]))
+        img = cv2.imread(str(data_path / img_data["file_name"]))
 
-        if args.show_bbox:
+        if show_bbox:
             # Add the bounding box to the image
             for annotation in anns:
                 top_x, top_y, width, height = annotation["bbox"]

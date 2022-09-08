@@ -27,20 +27,20 @@ def main():
     merged_annotations: list[Annotation] = []
     merged_categories: list[Category] = []
     for i, annotation_path in enumerate(annotations_paths):
-        with open(annotation_path) as annotations_file:
+        with open(annotation_path, 'r', encoding="utf-8") as annotations_file:
             coco_dataset = json.load(annotations_file)
         images: list[Image] = coco_dataset["images"]
 
         if args.change_names:
             assert (annotation_path.parent / "images").exists, f"No images found for annotations {annotation_path}"
-            for i in range(len(images)):
-                shutil.copy(annotation_path.parent / "images" / images[i]["file_name"],
-                            output_path / "images" / (annotation_path.parent.name + "_" + images[i]["file_name"]))
-                images[i]["file_name"] = annotation_path.parent.name + "_" + images[i]["file_name"]
+            for img_entry in images:
+                shutil.copy(annotation_path.parent / "images" / img_entry["file_name"],
+                            output_path / "images" / (annotation_path.parent.name + "_" + img_entry["file_name"]))
+                img_entry["file_name"] = annotation_path.parent.name + "_" + img_entry["file_name"]
 
         merged_images.extend(images)
         merged_annotations.extend(coco_dataset["annotations"])
-        # For this project the categories should be the same in every file, no need to duplicate them
+        # Categories should be the same in every file, no need to duplicate them
         if i == 0:
             merged_categories.extend(coco_dataset["categories"])
 
@@ -50,7 +50,7 @@ def main():
         "categories": merged_categories
     }
 
-    with open(output_path / "merged_annotations.json", 'w') as json_file:
+    with open(output_path / "merged_annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(merged_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."

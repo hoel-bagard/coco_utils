@@ -55,11 +55,12 @@ def polygon_area(x: list[float], y: list[float]) -> float:
     return 0.5*np.abs(np.dot(x, np.roll(y, 1))-np.dot(y, np.roll(x, 1)))
 
 
-def get_img_from_id(images: list[Image], img_id: str) -> Image:
-    """Returns the image with the given id."""
+def get_img_from_id(images: list[Image], img_id: str) -> Image | None:
+    """Returns the image with the given id, or None is no such image exists."""
     for image in images:
         if image["id"] == img_id:
             return image
+    return None
 
 
 def main():
@@ -78,7 +79,7 @@ def main():
     new_width, new_height = size
 
     # Load the dataset
-    with open(args.annotations) as annotations:
+    with open(args.annotations, 'r', encoding="utf-8") as annotations:
         coco_dataset = json.load(annotations)
     images = coco_dataset["images"]
     annotations = coco_dataset["annotations"]
@@ -120,7 +121,7 @@ def main():
         resized_annotations.append(annotation)
 
     nb_imgs = len(resized_images)
-    mp_args = list([(image, data_path, output_path, new_width, new_height) for image in resized_images])
+    mp_args = [(image, data_path, output_path, new_width, new_height) for image in resized_images]
     nb_images_processed = 0
     with Pool(processes=int(os.cpu_count() * 0.8)) as pool:
         for _ in pool.imap(worker, mp_args, chunksize=10):
@@ -135,7 +136,7 @@ def main():
         "categories": categories
     }
     output_path.mkdir(parents=True, exist_ok=True)
-    with open(output_path / "annotations.json", 'w') as json_file:
+    with open(output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(resized_dataset, json_file, indent=4)
 
     msg = "Finished resizing dataset."

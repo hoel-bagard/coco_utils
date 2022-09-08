@@ -28,7 +28,7 @@ def main():
     args = parser.parse_args()
 
     exts = [".jpg", ".png"]
-    image_paths = list([(str(p), ) for p in args.dir_path.rglob("*") if p.suffix in exts])
+    image_paths = [(str(p), ) for p in args.dir_path.rglob("*") if p.suffix in exts]
     nb_imgs = len(image_paths)
 
     nb_images_processed = 0

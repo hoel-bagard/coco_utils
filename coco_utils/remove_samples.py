@@ -20,7 +20,7 @@ def main():
     output_path.mkdir(parents=True, exist_ok=True)
 
     # Load the dataset
-    with open(annotations_path) as annotations:
+    with open(annotations_path, encoding="utf-8") as annotations:
         coco_dataset = json.load(annotations)
     images = coco_dataset["images"]
     annotations = coco_dataset["annotations"]
@@ -35,7 +35,7 @@ def main():
         "annotations": new_annotations,
         "categories": categories
     }
-    with open(output_path / "annotations.json", 'w') as json_file:
+    with open(output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(new_dataset, json_file, indent=4)
 
     print(f"Saved {len(new_images)} entries to {output_path}")
