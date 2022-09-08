@@ -10,15 +10,16 @@ import numpy as np
 from coco_types import Annotation, Image
 
 
-def worker(args: tuple[Path]):
-    """ Worker in charge of resizing an image
+def worker(args: tuple[Image, Path, Path, int, int]):
+    """Worker in charge of resizing an image.
 
     Args:
-        image (image): the image to process
-        data_path (path): path to the image directory
-        output_path (path): path to the output directory
-        new_width (int): width to which resize the image
-        new_height (int): height to which resize the image
+        args: Tuple containing the following:
+              - image: the image to process
+              - data_path: path to the image directory
+              - output_path: path to the output directory
+              - new_width: width to which resize the image
+              - new_height: height to which resize the image
     """
     image, data_path, output_path, new_width, new_height = args
 
@@ -31,7 +32,7 @@ def worker(args: tuple[Path]):
 
 
 def polygon_area(x: list[float], y: list[float]) -> float:
-    """ Returns the area of a polygon
+    """Returns the area of a polygon.
 
     Taken from: https://stackoverflow.com/questions/24467972/calculate-area-of-polygon-given-x-y-coordinates
 
@@ -55,21 +56,26 @@ def polygon_area(x: list[float], y: list[float]) -> float:
 
 
 def get_img_from_id(images: list[Image], img_id: str) -> Image:
-    """ Returns the image with the given id """
+    """Returns the image with the given id."""
     for image in images:
         if image["id"] == img_id:
             return image
 
 
 def main():
-    parser = argparse.ArgumentParser("Resizes the images labels of a COCO dataset.")
+    parser = argparse.ArgumentParser(description="Resizes the images labels of a COCO dataset.",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
     parser.add_argument("annotations", type=Path, help="Path to COCO annotations file.")
-    parser.add_argument("output_path", type=Path, help="Where to store the resized dataset")
-    parser.add_argument("size", nargs=2, type=int, help="Size to which the images will be resized")
+    parser.add_argument("output_path", type=Path, help="Where to store the resized dataset.")
+    parser.add_argument("size", nargs=2, type=int, help="Size to which the images will be resized.")
     args = parser.parse_args()
 
-    new_width, new_height = args.size
+    data_path: Path = args.data_path
+    output_path: Path = args.output_path
+    size: tuple[int, int] = args.size
+
+    new_width, new_height = size
 
     # Load the dataset
     with open(args.annotations) as annotations:
@@ -114,10 +120,10 @@ def main():
         resized_annotations.append(annotation)
 
     nb_imgs = len(resized_images)
-    mp_args = list([(image, args.data_path, args.output_path, new_width, new_height) for image in resized_images])
+    mp_args = list([(image, data_path, output_path, new_width, new_height) for image in resized_images])
     nb_images_processed = 0
     with Pool(processes=int(os.cpu_count() * 0.8)) as pool:
-        for result in pool.imap(worker, mp_args, chunksize=10):
+        for _ in pool.imap(worker, mp_args, chunksize=10):
             nb_images_processed += 1
             msg = f"Processing status: ({nb_images_processed}/{nb_imgs})"
             print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
@@ -128,8 +134,8 @@ def main():
         "annotations": resized_annotations,
         "categories": categories
     }
-    args.output_path.mkdir(parents=True, exist_ok=True)
-    with open(args.output_path / "annotations.json", 'w') as json_file:
+    output_path.mkdir(parents=True, exist_ok=True)
+    with open(output_path / "annotations.json", 'w') as json_file:
         json.dump(resized_dataset, json_file, indent=4)
 
     msg = "Finished resizing dataset."

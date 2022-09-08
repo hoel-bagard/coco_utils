@@ -7,13 +7,14 @@ import numpy as np
 
 
 def main():
-    parser = argparse.ArgumentParser("Splits COCO annotations file into training and validation sets.")
+    parser = argparse.ArgumentParser(description="Splits COCO annotations file into training and validation sets.",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
     parser.add_argument("annotations", type=Path, help="Path to COCO annotations file.")
     parser.add_argument("output_path", type=Path, help="Where to store the new Train and Validation datasets")
-    parser.add_argument("--spec_file", "--sf", type=Path, default=None,
+    parser.add_argument("--spec_file", "-sf", type=Path, default=None,
                         help="Path to a text file that specifies which images to use for val (one name per line)")
-    parser.add_argument("--split", "--s", type=float, default=0.85, help="Train split ratio")
+    parser.add_argument("--split", "-s", type=float, default=0.85, help="Train split ratio")
     args = parser.parse_args()
 
     # Load the dataset
@@ -26,8 +27,6 @@ def main():
     if not args.spec_file:
         number_of_images = len(images)
         indexes = np.arange(number_of_images)
-        # TODO: Should NOT do this since for this project images with different names are extremely similar
-        # (from the same sample)
         np.random.shuffle(indexes)
 
         # Split val / train

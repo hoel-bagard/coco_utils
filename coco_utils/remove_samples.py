@@ -5,16 +5,18 @@ from pathlib import Path
 
 
 def main():
-    parser = argparse.ArgumentParser("Create a smaller dataset by keeping a smaller id range.")
+    parser = argparse.ArgumentParser(description="Create a smaller dataset by keeping a smaller id range.",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("annotations_path", type=Path, help="Path to COCO annotations file.")
-    parser.add_argument("--output_path", "--o", type=Path, default=None,
+    parser.add_argument("--output_path", "-o", type=Path, default=None,
                         help="Where to store the new dataset, defaults to annotations_path/../smaller_dataset")
-    parser.add_argument("--max_id", "--m", type=float, default=100, help="All images with id above will be removed")
+    parser.add_argument("--max_id", "-m", type=float, default=100, help="All images with id above will be removed")
     args = parser.parse_args()
 
     annotations_path: Path = args.annotations_path
     max_id: int = args.max_id
     output_path: Path = args.output_path if args.output_path else annotations_path.parent / "smaller_dataset"
+
     output_path.mkdir(parents=True, exist_ok=True)
 
     # Load the dataset

@@ -1,7 +1,7 @@
+import argparse
 import json
 import shutil
-import xml.etree.ElementTree as ET
-from argparse import ArgumentParser
+import xml.etree.ElementTree as ET  # noqa: N817
 from pathlib import Path
 from typing import Union
 
@@ -9,7 +9,7 @@ from coco_types import Annotation, Category, Image
 
 
 def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int, list[str, tuple[int, int, int, int]]]:
-    """ Takes a path to an xml file and parses it to return the relevant information.
+    """Takes a path to an xml file and parses it to return the relevant information.
 
     Args:
         xml_path (str): Path to the xml file to parse
@@ -46,8 +46,7 @@ def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int,
 
 
 def get_all_classes(xmls_path: list[Path]) -> list[str]:
-    """ Takes a list of PascalVOC format xmls, and return a list of all the classes.
-        Not efficient, but sometimes better than hardcoding it.
+    """Takes a list of PascalVOC format xmls, and return a list of all the classes.
 
     Args:
         xml_paths (list): List with all the xml paths
@@ -66,7 +65,8 @@ def get_all_classes(xmls_path: list[Path]) -> list[str]:
 
 
 def main():
-    parser = ArgumentParser("Tool to convert PascalVOC format to coco format")
+    parser = argparse.ArgumentParser(description="Tool to convert PascalVOC format to coco format",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path,
                         help="Path to the dataset to convert. Images are expected to be in the same "
                         "or in an adjacent folder to the xmls. Images and corresponding xml files are expected to "
