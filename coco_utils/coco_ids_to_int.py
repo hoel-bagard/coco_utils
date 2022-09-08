@@ -1,8 +1,8 @@
 import argparse
-from pathlib import Path
-from typing import TypedDict
 import json
 import shutil
+from pathlib import Path
+from typing import TypedDict
 
 
 class Image(TypedDict):

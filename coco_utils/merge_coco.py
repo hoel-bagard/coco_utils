@@ -1,9 +1,9 @@
 import argparse
-from pathlib import Path
 import json
 import shutil
+from pathlib import Path
 
-from coco_types import Image, Annotation, Category
+from coco_types import Annotation, Category, Image
 
 
 def main():

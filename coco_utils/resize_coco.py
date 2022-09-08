@@ -1,14 +1,13 @@
 import argparse
-from pathlib import Path
-from multiprocessing import Pool
-import os
 import json
+import os
 import shutil
+from multiprocessing import Pool
+from pathlib import Path
 
 import cv2
 import numpy as np
-
-from coco_types import Image, Annotation
+from coco_types import Annotation, Image
 
 
 def worker(args: tuple[Path]):

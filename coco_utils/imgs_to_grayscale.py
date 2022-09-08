@@ -1,8 +1,8 @@
 import argparse
-from pathlib import Path
+import os
 import shutil
 from multiprocessing import Pool
-import os
+from pathlib import Path
 
 import cv2
 import numpy as np

@@ -1,11 +1,11 @@
+import json
+import shutil
+import xml.etree.ElementTree as ET
 from argparse import ArgumentParser
 from pathlib import Path
-import json
-import xml.etree.ElementTree as ET
 from typing import Union
-import shutil
 
-from coco_types import Image, Annotation, Category
+from coco_types import Annotation, Category, Image
 
 
 def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int, list[str, tuple[int, int, int, int]]]:

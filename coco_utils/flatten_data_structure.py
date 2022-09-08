@@ -1,8 +1,8 @@
-from argparse import ArgumentParser
-import xml.etree.ElementTree as ET
-from pathlib import Path
 import random
 import shutil
+import xml.etree.ElementTree as ET
+from argparse import ArgumentParser
+from pathlib import Path
 
 
 def main():

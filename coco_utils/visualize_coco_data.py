@@ -1,10 +1,10 @@
+import shutil
 from argparse import ArgumentParser
 from pathlib import Path
-import shutil
 
 import cv2
-from pycocotools.coco import COCO
 import matplotlib.pyplot as plt
+from pycocotools.coco import COCO
 
 
 def main():
