@@ -6,8 +6,7 @@ Requires python version >= 3.9
 
 ### Dependencies
 opencv-python\
-matplotlib\
-pycocotools
+matplotlib
 
 
 ### Clone the repository

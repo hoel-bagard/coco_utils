@@ -40,14 +40,13 @@ def main():
 
     print(f"Saved {len(new_images)} entries to {output_path}")
 
-    print("Now removing images. . .", end="\r")
+    print("Now copying images. . .", end="\r")
     for image in images:
         if image["id"] < max_id:
-            continue
-        in_img_path: Path = annotations_path.parent / "images" / image["file_name"]
-        out_img_path: Path = output_path / "images"
-        out_img_path.mkdir(exist_ok=True)
-        shutil.copy(in_img_path, out_img_path)
+            in_img_path: Path = annotations_path.parent / "images" / image["file_name"]
+            out_img_path: Path = output_path / "images"
+            out_img_path.mkdir(exist_ok=True)
+            shutil.copy(in_img_path, out_img_path)
 
     print("Finished trimming dataset.")
 
