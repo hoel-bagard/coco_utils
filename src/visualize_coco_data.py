@@ -35,6 +35,7 @@ def encoded_rle_to_mask(encoded_count_rle: str, height: int, width: int) -> npt.
     """
     bytes_rle = str.encode(encoded_count_rle, encoding="ascii")
 
+    # Get the RLE from the encoded RLE.
     m, current_byte_idx, counts = 0, 0, np.zeros(len(encoded_count_rle), dtype=np.uint32)
     while current_byte_idx < len(bytes_rle):
         continuous_pixels, shift, high_order_bit = 0, 0, 1
@@ -55,6 +56,7 @@ def encoded_rle_to_mask(encoded_count_rle: str, height: int, width: int) -> npt.
         counts[m] = continuous_pixels
         m += 1
 
+    # Construct the mask from the RLE.
     mask = np.zeros(height * width, dtype=np.bool_)
     current_value, current_position = 0, 0
     for nb_pixels in counts:
@@ -86,6 +88,25 @@ def mask_to_rle(mask: npt.NDArray[np.uint8] | npt.NDArray[np.bool_]) -> list[int
     return rle
 
 
+def get_class_from_id(cls_id: int, categories: list[Category]) -> str:
+    """Returns the string representation of the given class id.
+
+    Args:
+        cls_id: The id whose class name should be returned.
+        categories: The list of categories from the coco dataset.
+
+    Returns:
+        The string representation for the given class id.
+
+    Raises:
+        ValueError: If `cls_id` is not in the categories.
+    """
+    for cat in categories:
+        if cat["id"] == cls_id:
+            return cat["name"]
+    raise ValueError(f"There is no class with the id {cls_id}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=("Tool to visualize coco labels. "
                                                   "Use with 'python -m src.visualize_coco_data <path to image folder> "
@@ -107,27 +128,19 @@ def main():
     annotations: list[Annotation] = coco_dataset["annotations"]
     categories: list[Category] = coco_dataset["categories"]
 
+    bbox_thickness = 2
     nb_imgs = len(img_entries)
     for i, img_entry in enumerate(img_entries, start=1):
         msg = f"Showing image: {img_entry['file_name']} ({i}/{nb_imgs})"
         print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
               end='\r' if i != nb_imgs else '\n', flush=True)
-        print()
-        print()
 
         img = cv2.imread(str(data_path / img_entry["file_name"]))
 
         img_annotations = [annotation for annotation in annotations
                            if annotation["image_id"] == img_entry["id"]]
         for annotation in img_annotations:
-            # Add the bounding boxes to the image
-            if show_bbox:
-                top_x, top_y, width, height = annotation["bbox"]
-                img = cv2.rectangle(img,
-                                    (int(top_x), int(top_y)),
-                                    (int(top_x+width), int(top_y+height)),
-                                    (255, 0, 0), 5)
-
+            color = np.random.randint(0, high=255, size=3, dtype=np.uint8)
             # Add the segmentation masks
             if "segmentation" in annotation:
                 segmentation = annotation["segmentation"]
@@ -148,9 +161,27 @@ def main():
                         mask = encoded_rle_to_mask(segmentation["counts"], *segmentation["size"])
                     else:
                         raise ValueError(f"Unsupported type for count: {type(segmentation['counts'])}")
-                color = np.random.randint(0, high=255, size=3, dtype=np.uint8)
                 mask = color * np.expand_dims(mask, -1)
                 img = cv2.addWeighted(img, 0.7, mask, 0.3, 0.0)
+
+            # Add the bounding boxes to the image
+            if show_bbox:
+                top_x, top_y, width, height = annotation["bbox"]
+                top_x, top_y, width, height = int(top_x), int(top_y), int(width), int(height)
+                cv2.rectangle(img,
+                              (top_x, top_y),
+                              (top_x+width, top_y+height),
+                              tuple(int(c) for c in color), bbox_thickness)
+
+                # Add class
+                class_name = get_class_from_id(annotation["category_id"], categories)
+                text_width, text_height = cv2.getTextSize(class_name, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)[0]
+                cv2.rectangle(img,
+                              (top_x+bbox_thickness, top_y+bbox_thickness),
+                              (top_x+4*bbox_thickness+text_width, top_y+4*bbox_thickness+text_height),
+                              (0, 0, 0), -1)
+                cv2.putText(img, class_name, (top_x+2*bbox_thickness, top_y+2*bbox_thickness+text_height),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         show_img(img, img_entry["file_name"])
 
 
