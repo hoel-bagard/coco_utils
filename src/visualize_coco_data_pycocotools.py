@@ -23,8 +23,8 @@ def main():
 
     coco = COCO(json_path)
 
-    # Get all images containing given categories, select one at random
-    cat_ids = coco.getCatIds(catNms=["Thread"])
+    # Get all images containing given categories.
+    cat_ids = coco.getCatIds(catNms=["cat"])
     img_ids = coco.getImgIds(catIds=cat_ids)
 
     for i in range(len(img_ids)):
