@@ -60,7 +60,7 @@ def main():
         "categories": merged_categories
     }
 
-    with open(output_path / "merged_annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(merged_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."
