@@ -3,7 +3,7 @@ import json
 import shutil
 from pathlib import Path
 
-from coco_types import Annotation, Category, Image
+from src.types.coco_types import Annotation, Category, Image
 
 
 def main():
