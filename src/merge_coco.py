@@ -13,9 +13,9 @@ def main():
                                                   "be copied to the output dir"),
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("annotations_paths", nargs="+", type=Path, help="Paths to COCO annotations files to merge.")
+    parser.add_argument("output_path", type=Path, help="Path for to where the merged dataset will be stored.")
     parser.add_argument("--change_names", "-c", action="store_true",
                         help="Change image names by prefixing the dataset name.")
-    parser.add_argument("output_path", type=Path, help="Path for to where the merged dataset will be stored.")
     args = parser.parse_args()
 
     annotations_paths: list[Path] = args.annotations_paths
