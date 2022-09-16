@@ -1,16 +1,15 @@
+import argparse
 import json
 import shutil
-import xml.etree.ElementTree as ET
-from argparse import ArgumentParser
+import xml.etree.ElementTree as ET  # noqa: N817
 from pathlib import Path
 from typing import Union
 
-import numpy as np
 from coco_types import Annotation, Category, Image
 
 
 def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int, list[str, tuple[int, int, int, int]]]:
-    """ Takes a path to an xml file and parses it to return the relevant information.
+    """Takes a path to an xml file and parses it to return the relevant information.
 
     Args:
         xml_path (str): Path to the xml file to parse
@@ -47,8 +46,7 @@ def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int,
 
 
 def get_all_classes(xmls_path: list[Path]) -> list[str]:
-    """ Takes a list of PascalVOC format xmls, and return a list of all the classes.
-        Not efficient, but sometimes better than hardcoding it.
+    """Takes a list of PascalVOC format xmls, and return a list of all the classes.
 
     Args:
         xml_paths (list): List with all the xml paths
@@ -66,49 +64,9 @@ def get_all_classes(xmls_path: list[Path]) -> list[str]:
     return list(classes)
 
 
-def polygon_area(x: list[float], y: list[float]) -> float:
-    """ Returns the area of a polygon
-
-    Taken from: https://stackoverflow.com/questions/24467972/calculate-area-of-polygon-given-x-y-coordinates
-
-    Args:
-        x (list): List of with x coordinates of the vertices
-        y (list): List of with y coordinates of the vertices
-
-    Exemple:
-        If the polygon is defined by a list of [x1, y1, ...., x_n, y_n] coordinates, then split it like this:
-        x = [239.97, 222.04, 199.84, 213.5, 259.62, 274.13, 277.55, 249.37, 237.41, 242.54, 228.87]
-        y = [260.24, 270.49, 253.41, 227.79, 200.46, 202.17, 210.71, 253.41, 264.51, 261.95, 271.34]
-
-        then:
-            >>> PolyArea(x, y)
-            2765.1486500000005
-
-    Returns:
-        (float): The area of the polygon
-    """
-    return 0.5*np.abs(np.dot(x, np.roll(y, 1))-np.dot(y, np.roll(x, 1)))
-
-
-def flatten(t: list):
-    return [item for sublist in t for item in sublist]
-
-
-def get_unused_id(list_to_check: list[Annotation]) -> str:
-    """ Returns an id that is not already in the list """
-    while True:
-        new_id = str(np.random.random())
-        already_used = False
-        for entry in list_to_check:
-            if entry["id"] == new_id:
-                already_used = True
-                break
-        if not already_used:
-            return new_id
-
-
 def main():
-    parser = ArgumentParser("Tool to convert PascalVOC format to coco format")
+    parser = argparse.ArgumentParser(description="Tool to convert PascalVOC format to coco format",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path,
                         help="Path to the dataset to convert. Images are expected to be in the same "
                         "or in an adjacent folder to the xmls. Images and corresponding xml files are expected to "
@@ -160,10 +118,7 @@ def main():
                 "id": bb_id,
                 "image_id": i,
                 "category_id": cls_name_to_id[cls_name],
-                # "segmentation": [flatten([[point["x"], point["y"]] for point in region["points"]])],
                 "segmentation": [],
-                # "area": polygon_area([point["x"] for point in region["points"]],
-                #                      [point["y"] for point in region["points"]]),
                 "area": width * height,
                 "bbox": [bbox[0],  # Top left x position
                          bbox[1],   # Top left y position
@@ -182,7 +137,7 @@ def main():
 
     output_path: Path = args.output_path if args.output_path else args.data_path.parent / "coco_annotations.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w') as json_file:
+    with open(output_path, 'w', encoding="utf-8") as json_file:
         json.dump(coco_dataset, json_file, indent=4)
 
     print(f"Saved the coco annotations to {output_path}")

@@ -2,28 +2,12 @@ import argparse
 import json
 import shutil
 from pathlib import Path
-from typing import TypedDict
 
-
-class Image(TypedDict):
-    id: int
-    width: int
-    height: int
-    file_name: str
-
-
-class Annotation(TypedDict):
-    id: int
-    image_id: int
-    category_id: int
-    segmentation: list[list[float]]
-    area: float
-    bbox: list[float]
-    iscrowd: int  # Either 1 or 0   (Always 0 in this project)
+from coco_types import Annotation, Image
 
 
 def is_duplicate(list_to_check: list[Image], key: str, elt_id: str) -> bool:
-    """ Checks if the given id is already in the list """
+    """Checks if the given id is already in the list."""
     for entry in list_to_check:
         if entry[key] == elt_id:
             return True
@@ -31,13 +15,13 @@ def is_duplicate(list_to_check: list[Image], key: str, elt_id: str) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser("Changes image ids in a coco dataset from strings to ints."
-                                     "Also removes duplicate entries.")
+    parser = argparse.ArgumentParser(description=("Changes image ids in a coco dataset from strings to ints."
+                                                  "Also removes duplicate entries."))
     parser.add_argument("annotations", type=Path, help="Path to COCO annotations file.")
     args = parser.parse_args()
 
     # Load the dataset
-    with open(args.annotations) as annotations:
+    with open(args.annotations, encoding="utf-8") as annotations:
         coco_dataset = json.load(annotations)
     images = coco_dataset["images"]
     annotations = coco_dataset["annotations"]
@@ -57,13 +41,13 @@ def main():
 
     # Change image ids to ints and create a conversion table that does old_id -> new_id
     image_id_conversion_table = {}
-    for i in range(len(no_duplicate_images)):
-        image_id_conversion_table[no_duplicate_images[i]["id"]] = i
-        no_duplicate_images[i]["id"] = i
+    for i, img_entry in enumerate(no_duplicate_images):
+        image_id_conversion_table[img_entry["id"]] = i
+        img_entry["id"] = i
 
-    for i in range(len(no_duplicate_annotations)):
-        no_duplicate_annotations[i]["id"] = i
-        no_duplicate_annotations[i]["image_id"] = image_id_conversion_table[no_duplicate_annotations[i]["image_id"]]
+    for i, annotation_entry in enumerate(no_duplicate_annotations):
+        annotation_entry["id"] = i
+        annotation_entry["image_id"] = image_id_conversion_table[annotation_entry["image_id"]]
 
     # Save the corrected annotations
     corrected_dataset = {
@@ -72,7 +56,7 @@ def main():
         "categories": categories
     }
     shutil.move(args.annotations, args.annotations.parent / "original_ids_annotations.json")
-    with open(args.annotations.parent / "annotations.json", 'w') as json_file:
+    with open(args.annotations.parent / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(corrected_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."

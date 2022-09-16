@@ -7,17 +7,18 @@ import numpy as np
 
 
 def main():
-    parser = argparse.ArgumentParser("Splits COCO annotations file into training and validation sets.")
+    parser = argparse.ArgumentParser(description="Splits COCO annotations file into training and validation sets.",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
     parser.add_argument("annotations", type=Path, help="Path to COCO annotations file.")
     parser.add_argument("output_path", type=Path, help="Where to store the new Train and Validation datasets")
-    parser.add_argument("--spec_file", "--sf", type=Path, default=None,
+    parser.add_argument("--spec_file", "-sf", type=Path, default=None,
                         help="Path to a text file that specifies which images to use for val (one name per line)")
-    parser.add_argument("--split", "--s", type=float, default=0.85, help="Train split ratio")
+    parser.add_argument("--split", "-s", type=float, default=0.85, help="Train split ratio")
     args = parser.parse_args()
 
     # Load the dataset
-    with open(args.annotations) as annotations:
+    with open(args.annotations, encoding="utf-8") as annotations:
         coco_dataset = json.load(annotations)
     images = np.asarray(coco_dataset["images"])
     annotations = coco_dataset["annotations"]
@@ -26,8 +27,6 @@ def main():
     if not args.spec_file:
         number_of_images = len(images)
         indexes = np.arange(number_of_images)
-        # TODO: Should NOT do this since for this project images with different names are extremely similar
-        # (from the same sample)
         np.random.shuffle(indexes)
 
         # Split val / train
@@ -35,7 +34,7 @@ def main():
         val_images = list(images[indexes[int(number_of_images*args.split):]])
     else:
         val_img_names = []
-        with open(args.spec_file, 'r') as spec_file:
+        with open(args.spec_file, 'r', encoding="utf-8") as spec_file:
             for line in spec_file:
                 val_img_names.append(line.strip())
 
@@ -65,7 +64,7 @@ def main():
     }
     train_output_path: Path = args.output_path / "train"
     train_output_path.mkdir(parents=True, exist_ok=True)
-    with open(train_output_path / "annotations.json", 'w') as json_file:
+    with open(train_output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(train_dataset, json_file, indent=4)
 
     # Save new validation annotations
@@ -76,7 +75,7 @@ def main():
     }
     val_output_path: Path = args.output_path / "validation"
     val_output_path.mkdir(parents=True, exist_ok=True)
-    with open(val_output_path / "annotations.json", 'w') as json_file:
+    with open(val_output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
         json.dump(val_dataset, json_file, indent=4)
 
     print(f"Saved {len(train_images)} entries to {train_output_path} and {len(val_images)} to {val_output_path}")
