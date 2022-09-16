@@ -57,6 +57,7 @@ def encoded_rle_to_mask(encoded_count_rle: str, height: int, width: int) -> npt.
         m += 1
 
     # Construct the mask from the RLE.
+    # (Could do it fully in numpy by using np.repeat and starting from an array of alternating 0s and 1)
     mask = np.zeros(height * width, dtype=np.bool_)
     current_value, current_position = 0, 0
     for nb_pixels in counts:
