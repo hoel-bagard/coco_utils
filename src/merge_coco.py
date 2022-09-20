@@ -27,11 +27,14 @@ def main():
 
     merged_images: list[Image] = []
     merged_annotations: list[Annotation] = []
+    new_img_id = 0
+    new_annotation_id = 0
     for i, annotation_path in enumerate(annotations_paths):
         print(f"Processing file {annotation_path}")
         with open(annotation_path, 'r', encoding="utf-8") as annotations_file:
             coco_dataset = json.load(annotations_file)
         images: list[Image] = coco_dataset["images"]
+        annotations: list[Annotation] = coco_dataset["annotations"]
         nb_imgs = len(images)
 
         assert (annotation_path.parent / "images").exists, f"No images found for annotations {annotation_path}"
@@ -47,8 +50,19 @@ def main():
             shutil.copy(annotation_path.parent / "images" / img_entry["file_name"], output_img_path / filename)
             img_entry["file_name"] = filename
 
+            # Update the annotation ids (so that they still link to the same image despite the id change)
+            img_annotations = [annotation for annotation in annotations
+                               if annotation["image_id"] == img_entry["id"]]
+            for annotation in img_annotations:
+                annotation["image_id"] = new_img_id
+                annotation["id"] = new_annotation_id
+                new_annotation_id += 1
+
+            img_entry["id"] = new_img_id
+            new_img_id += 1
+
         merged_images.extend(images)
-        merged_annotations.extend(coco_dataset["annotations"])
+        merged_annotations.extend(annotations)
         # Categories should be the same in every file, no need to duplicate them
         if i == 0:
             merged_categories: list[Category] = coco_dataset["categories"]
