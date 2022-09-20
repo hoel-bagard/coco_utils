@@ -27,7 +27,6 @@ def main():
 
     merged_images: list[Image] = []
     merged_annotations: list[Annotation] = []
-    merged_categories: list[Category] = []
     for i, annotation_path in enumerate(annotations_paths):
         print(f"Processing file {annotation_path}")
         with open(annotation_path, 'r', encoding="utf-8") as annotations_file:
@@ -52,7 +51,7 @@ def main():
         merged_annotations.extend(coco_dataset["annotations"])
         # Categories should be the same in every file, no need to duplicate them
         if i == 0:
-            merged_categories.extend(coco_dataset["categories"])
+            merged_categories: list[Category] = coco_dataset["categories"]
 
     merged_dataset = {
         "images": merged_images,
