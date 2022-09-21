@@ -3,10 +3,10 @@ import json
 import shutil
 from pathlib import Path
 
-from coco_types import Annotation, Image
+from src.types.coco_types import Annotation, Image
 
 
-def is_duplicate(list_to_check: list[Image], key: str, elt_id: str) -> bool:
+def is_duplicate(list_to_check: list[Image] | list[Annotation], key: str, elt_id: str) -> bool:
     """Checks if the given id is already in the list."""
     for entry in list_to_check:
         if entry[key] == elt_id:
