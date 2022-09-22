@@ -2,6 +2,7 @@ import argparse
 import json
 import shutil
 from pathlib import Path
+from typing import Optional
 
 import cv2
 import numpy as np
@@ -116,11 +117,15 @@ def main():
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
     parser.add_argument("json_path", type=Path, help="Path to the json file with the coco annotations.")
     parser.add_argument("--show_bbox", "-sb", action="store_true", help="Show the bounding boxes.")
+    parser.add_argument("--show_individual_masks", "-sm", action="store_true", help="Show the masks one by one.")
+    parser.add_argument("--image_name", "-i", type=str, default=None, help="If given, only that image will be displayed.")
     args = parser.parse_args()
 
     data_path: Path = args.data_path
     json_path: Path = args.json_path
     show_bbox: bool = args.show_bbox
+    show_individual_masks: bool = args.show_individual_masks
+    img_name: Optional[str] = args.image_name
 
     with open(json_path, 'r', encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
@@ -135,6 +140,9 @@ def main():
         msg = f"Showing image: {img_entry['file_name']} ({i}/{nb_imgs})"
         print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
               end='\r' if i != nb_imgs else '\n', flush=True)
+
+        if img_name is not None and img_name != img_entry["file_name"]:
+            continue
 
         img = cv2.imread(str(data_path / img_entry["file_name"]))
 
@@ -163,6 +171,8 @@ def main():
                     else:
                         raise ValueError(f"Unsupported type for count: {type(segmentation['counts'])}")
                 mask = color * np.expand_dims(mask, -1)
+                if show_individual_masks:
+                    show_img(mask, get_class_from_id(annotation["category_id"], categories))
                 img = cv2.addWeighted(img, 0.7, mask, 0.3, 0.0)
 
             # Add the bounding boxes to the image
