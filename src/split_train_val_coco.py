@@ -23,17 +23,17 @@ def main():
     data_path: Path = args.data_path
     annotations_path: Path = args.annotations_path
     output_path: Path = args.output_path
-    spec_file: Optional[Path] = args.spec_file
+    spec_file_path: Optional[Path] = args.spec_file
     split: float = args.split
 
     # Load the dataset
-    with open(annotations_path, encoding="utf-8") as annotations:
-        coco_dataset = json.load(annotations)
+    with open(annotations_path, encoding="utf-8") as annotations_file:
+        coco_dataset = json.load(annotations_file)
     images = np.asarray(coco_dataset["images"])
     annotations: list[Annotation] = coco_dataset["annotations"]
     categories: list[Category] = coco_dataset["categories"]
 
-    if not spec_file:
+    if spec_file_path is None:
         number_of_images = len(images)
         indexes = np.arange(number_of_images)
         np.random.shuffle(indexes)
@@ -43,7 +43,7 @@ def main():
         val_images: list[Image] = list(images[indexes[int(number_of_images*split):]])
     else:
         val_img_names = []
-        with open(spec_file, 'r', encoding="utf-8") as spec_file:
+        with open(spec_file_path, 'r', encoding="utf-8") as spec_file:
             for line in spec_file:
                 val_img_names.append(line.strip())
 

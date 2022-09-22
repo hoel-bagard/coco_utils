@@ -27,6 +27,7 @@ def main():
 
     merged_images: list[Image] = []
     merged_annotations: list[Annotation] = []
+    merged_categories: list[Category] = []
     new_img_id = 0
     new_annotation_id = 0
     for i, annotation_path in enumerate(annotations_paths):
@@ -35,6 +36,7 @@ def main():
             coco_dataset = json.load(annotations_file)
         images: list[Image] = coco_dataset["images"]
         annotations: list[Annotation] = coco_dataset["annotations"]
+        categories: list[Category] = coco_dataset["categories"]
         nb_imgs = len(images)
 
         assert (annotation_path.parent / "images").exists, f"No images found for annotations {annotation_path}"
@@ -63,9 +65,10 @@ def main():
 
         merged_images.extend(images)
         merged_annotations.extend(annotations)
-        # Categories should be the same in every file, no need to duplicate them
         if i == 0:
-            merged_categories: list[Category] = coco_dataset["categories"]
+            merged_categories = categories
+        else:
+            assert merged_categories == categories, "Categories should be the same in every annotations file."
 
     merged_dataset = {
         "images": merged_images,

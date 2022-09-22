@@ -1,3 +1,4 @@
+"""Old script that needs to be adapted on a per dataset basis."""
 import argparse
 import random
 import shutil
@@ -27,6 +28,8 @@ def main():
         labels_output_path = img_output_path / "labels"
         labels_output_path.mkdir(parents=True, exist_ok=True)
         img_output_path = img_output_path / "imgs"
+    else:
+        labels_output_path = None
     img_output_path.mkdir(parents=True, exist_ok=True)
 
     exts = (".png", ".jpg", ".bmp")
@@ -38,7 +41,7 @@ def main():
 
         file_output_path = img_output_path / img_path.name
         xml_modified = False
-        xml_path: Path = None
+        xml_path: Path | None = None
 
         # Check if xml exists (either next to the image or in an adjacent "labels" folder)
         if labels_too:
@@ -49,7 +52,7 @@ def main():
 
         if file_output_path.exists():
             # There is already an image and xml label file with that name. Rename and the move.
-            if xml_path:
+            if xml_path is not None:
                 xml_modified = True
                 tree = ET.parse(xml_path)
 
@@ -58,7 +61,7 @@ def main():
                     xml_path = xml_path.with_stem(file_output_path.stem)
 
                 root: ET.Element = tree.getroot()
-                root.find("filename").text = file_output_path.name
+                root.find("filename").text = file_output_path.name  # type: ignore
 
             # There is already an image with that name.
             # But no xml (maybe a coco file somewhere else, but then it's already too late)
@@ -68,11 +71,12 @@ def main():
                 continue
 
         moving_fn(img_path, file_output_path)
-        if xml_path and not xml_modified:
-            moving_fn(xml_path, labels_output_path / xml_path.name)
-        elif xml_modified:
-            with open(labels_output_path / xml_path.name, "wb") as f:
-                tree.write(f)
+        if labels_output_path is not None and xml_path:
+            if not xml_modified:
+                moving_fn(xml_path, labels_output_path / xml_path.name)
+            else:
+                with open(labels_output_path / xml_path.name, "wb") as f:
+                    tree.write(f)  # type: ignore
 
     print("\nFinished!")
 

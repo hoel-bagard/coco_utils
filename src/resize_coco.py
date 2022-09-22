@@ -7,7 +7,8 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from coco_types import Annotation, Image
+
+from src.types.coco_types import Annotation, Category, Image
 
 
 def worker(args: tuple[Image, Path, Path, int, int]):
@@ -55,12 +56,23 @@ def polygon_area(x: list[float], y: list[float]) -> float:
     return 0.5*np.abs(np.dot(x, np.roll(y, 1))-np.dot(y, np.roll(x, 1)))
 
 
-def get_img_from_id(images: list[Image], img_id: str) -> Image | None:
-    """Returns the image with the given id, or None is no such image exists."""
+def get_img_from_id(images: list[Image], img_id: int) -> Image:
+    """Returns the image with the given id.
+
+    Args:
+        images: A list of image entries.
+        img_id: The id of the image that should be returned.
+
+    Returns:
+        The image entry.
+
+    Raises:
+        ValueError is the given idea does not correspond to an image.
+    """
     for image in images:
         if image["id"] == img_id:
             return image
-    return None
+    raise ValueError(f"No image with id {img_id} is present in the dataset.")
 
 
 def main():
@@ -79,11 +91,11 @@ def main():
     new_width, new_height = size
 
     # Load the dataset
-    with open(args.annotations, 'r', encoding="utf-8") as annotations:
-        coco_dataset = json.load(annotations)
-    images = coco_dataset["images"]
-    annotations = coco_dataset["annotations"]
-    categories = coco_dataset["categories"]
+    with open(args.annotations, 'r', encoding="utf-8") as annotations_file:
+        coco_dataset = json.load(annotations_file)
+    images: list[Image] = coco_dataset["images"]
+    annotations: list[Annotation] = coco_dataset["annotations"]
+    categories: list[Category] = coco_dataset["categories"]
 
     resized_images: list[Image] = []
     resized_annotations: list[Annotation] = []
@@ -101,6 +113,8 @@ def main():
         resized_images.append(resized_image)
 
         width_ratio, height_ratio = width / new_width, height / new_height
+        if not isinstance(annotation["segmentation"], list):
+            raise TypeError("This script only supports polygon type segmentation.")
         new_segmentation = [v / width_ratio if i % 2 == 0 else v / height_ratio
                             for i, v in enumerate(annotation["segmentation"][0])]
         new_area = polygon_area([v for i, v in enumerate(new_segmentation) if i % 2 == 0],
@@ -123,7 +137,8 @@ def main():
     nb_imgs = len(resized_images)
     mp_args = [(image, data_path, output_path, new_width, new_height) for image in resized_images]
     nb_images_processed = 0
-    with Pool(processes=int(os.cpu_count() * 0.8)) as pool:
+    nb_processes = int(cpu_count * 0.8) if (cpu_count := os.cpu_count() is not None) else 1
+    with Pool(processes=nb_processes) as pool:
         for _ in pool.imap(worker, mp_args, chunksize=10):
             nb_images_processed += 1
             msg = f"Processing status: ({nb_images_processed}/{nb_imgs})"

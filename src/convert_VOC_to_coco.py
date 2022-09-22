@@ -1,3 +1,5 @@
+# pyright: reportOptionalMemberAccess=false
+# pyright: reportGeneralTypeIssues=false
 import argparse
 import json
 import shutil
@@ -5,10 +7,11 @@ import xml.etree.ElementTree as ET  # noqa: N817
 from pathlib import Path
 from typing import Union
 
-from coco_types import Annotation, Category, Image
+from src.types.coco_types import Annotation, Category, Image
 
 
-def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int, list[str, tuple[int, int, int, int]]]:
+def parse_voc2007_annotation(xml_path: Union[str, Path]
+                             ) -> tuple[str, int, int, list[tuple[str, tuple[int, int, int, int]]]]:
     """Takes a path to an xml file and parses it to return the relevant information.
 
     Args:
@@ -27,20 +30,18 @@ def parse_voc2007_annotation(xml_path: Union[str, Path]) -> tuple[str, int, int,
 
     objects: ET.Element = root.findall("object")
 
-    labels = []
+    labels: list[tuple[str, tuple[int, int, int, int]]] = []
     for item in objects:
         difficult = int(item.find("difficult").text)
         if difficult:
             continue
-        labels.append([])
 
         cls = item.find("name").text
-        labels[-1].append(cls)
         bbox = ((int(item.find("bndbox").find("xmin").text)),
                 (int(item.find("bndbox").find("ymin").text)),
                 (int(item.find("bndbox").find("xmax").text)),
                 (int(item.find("bndbox").find("ymax").text)))
-        labels[-1].append(bbox)
+        labels.append((cls, bbox))
 
     return img_name, width, height, labels
 
@@ -54,7 +55,7 @@ def get_all_classes(xmls_path: list[Path]) -> list[str]:
     Returns:
         List with all the classes
     """
-    classes = set()
+    classes: set[str] = set()
     for xml_path in xmls_path:
         root: ET.Element = ET.parse(xml_path).getroot()
         objects: ET.Element = root.findall("object")

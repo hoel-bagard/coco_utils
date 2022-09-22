@@ -79,7 +79,8 @@ def mask_to_rle(mask: npt.NDArray[np.uint8] | npt.NDArray[np.bool_]) -> list[int
     Returns:
         The RLE list corresponding to the mask.
     """
-    previous_value, count, rle = 0, 0, []
+    previous_value, count = 0, 0
+    rle: list[int] = []
     for pixel in mask.flatten():
         if pixel != previous_value:
             rle.append(count)
@@ -163,14 +164,10 @@ def main():
                     # img = cv2.fillPoly(img, [pts], color)
                     raise NotImplementedError("Polygon segmentation is not implemented yet.")
                 else:
-                    # Use match/case here ?  (once linters/type checkers support it.)
                     if isinstance(segmentation["counts"], list):
                         raise NotImplementedError("Mask segmentation is not implemented yet.")
-                    # Encoded RLE
-                    elif isinstance(segmentation["counts"], str):
-                        mask = encoded_rle_to_mask(segmentation["counts"], *segmentation["size"])
                     else:
-                        raise ValueError(f"Unsupported type for count: {type(segmentation['counts'])}")
+                        mask = encoded_rle_to_mask(segmentation["counts"], *segmentation["size"])
                 mask = color * np.expand_dims(mask, -1)
                 if show_individual_masks:
                     show_img(mask, get_class_from_id(annotation["category_id"], categories))

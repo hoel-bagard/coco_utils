@@ -1,0 +1,44 @@
+{
+  "include": [
+    "src"
+  ],
+
+  "exclude": [
+    "env",
+    "venv",
+    "typings"
+  ]
+
+  "strictListInference": true,
+  "strictDictionaryInference": true,
+  "strictSetInference": true,
+
+  "reportMissingModuleSource": false,
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportUnusedImport": true,
+  "reportUnusedClass": "warning",
+  "reportUnusedFunction": "warning",
+  "reportUnusedVariable": "warning",
+  "reportDuplicateImport": "warning",
+  "reportUntypedNamedTuple": "warning",
+  "reportMissingSuperCall": false,
+  "reportUnknownArgumentType": "warning",
+  "reportUnknownLambdaType": "warning",
+  "reportUnknownVariableType": "warning",
+  "reportUnknownMemberType": false,
+  "reportMissingParameterType": "warning",
+  "reportMissingTypeArgument": "warning",
+  "reportCallInDefaultInitializer": false,
+  "reportUnnecessaryIsInstance": "warning",
+  "reportUnnecessaryCast": "warning",
+  "reportUnnecessaryComparison": "warning",
+  "reportImplicitStringConcatenation": false,
+  "reportUnusedCallResult": false,
+  "reportUnusedExpression": "warning",
+  "reportUnnecessaryTypeIgnoreComment": "warning",
+  "reportMatchNotExhaustive": "warning",
+
+  "pythonVersion": "3.10",
+  "pythonPlatform": "Linux",
+}
