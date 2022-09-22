@@ -118,7 +118,8 @@ def main():
     parser.add_argument("json_path", type=Path, help="Path to the json file with the coco annotations.")
     parser.add_argument("--show_bbox", "-sb", action="store_true", help="Show the bounding boxes.")
     parser.add_argument("--show_individual_masks", "-sm", action="store_true", help="Show the masks one by one.")
-    parser.add_argument("--image_name", "-i", type=str, default=None, help="If given, only that image will be displayed.")
+    parser.add_argument("--image_name", "-i", type=str, default=None,
+                        help="If given, only that image will be displayed.")
     args = parser.parse_args()
 
     data_path: Path = args.data_path
