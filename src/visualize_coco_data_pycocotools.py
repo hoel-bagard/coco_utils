@@ -1,12 +1,14 @@
+# type: ignore[reportUnknownVariableType]
+"""Script to visualize the labels of a coco-like dataset using the official coco api."""
 import argparse
 import shutil
 from pathlib import Path
 
 import cv2
 import matplotlib.pyplot as plt
-import numpy as np
-import numpy.typing as npt
 from pycocotools.coco import COCO
+
+from src.types.coco_types import Annotation, Image
 
 
 def main():
@@ -24,19 +26,18 @@ def main():
     coco = COCO(json_path)
 
     # Get all images containing given categories.
-    cat_ids = coco.getCatIds(catNms=["cat"])
-    img_ids = coco.getImgIds(catIds=cat_ids)
+    img_ids: list[int] = coco.getImgIds()
 
     for i in range(len(img_ids)):
-        img_data = coco.loadImgs([img_ids[i]])[0]
+        img_data: Image = coco.loadImgs([img_ids[i]])[0]
         msg = f"Showing image: {img_data['file_name']} ({i+1}/{len(img_ids)})"
-        print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
+        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
-        ann_ids = coco.getAnnIds(imgIds=[img_data["id"]])
-        anns = coco.loadAnns(ann_ids)
+        ann_ids: list[int] = coco.getAnnIds(imgIds=[img_data["id"]])
+        anns: list[Annotation] = coco.loadAnns(ann_ids)
 
         # Load an image and its corresponding instance annotations then display it
-        img: npt.NDArray[np.uint8] = cv2.imread(str(data_path / img_data["file_name"]))
+        img = cv2.imread(str(data_path / img_data["file_name"]))
         if show_bbox:
             # Add the bounding box to the image
             for annotation in anns:
@@ -45,7 +46,7 @@ def main():
                                     (255, 0, 0), 5)
 
         plt.imshow(img)
-        plt.axis('off')
+        plt.axis("off")
         coco.showAnns(anns)
         plt.show()
 

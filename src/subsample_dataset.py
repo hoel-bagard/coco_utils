@@ -35,7 +35,7 @@ def main():
         "annotations": new_annotations,
         "categories": categories
     }
-    with open(output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(output_path / "annotations.json", "w", encoding="utf-8") as json_file:
         json.dump(new_dataset, json_file, indent=4)
 
     print(f"Saved {len(new_images)} entries to {output_path}")

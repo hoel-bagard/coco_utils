@@ -56,11 +56,11 @@ def main():
         "categories": categories
     }
     shutil.move(args.annotations, args.annotations.parent / "original_ids_annotations.json")
-    with open(args.annotations.parent / "annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(args.annotations.parent / "annotations.json", "w", encoding="utf-8") as json_file:
         json.dump(corrected_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."
-    print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
+    print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
 
 
 if __name__ == "__main__":

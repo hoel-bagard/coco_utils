@@ -79,7 +79,8 @@ def mask_to_rle(mask: npt.NDArray[np.uint8] | npt.NDArray[np.bool_]) -> list[int
     Returns:
         The RLE list corresponding to the mask.
     """
-    previous_value, count, rle = 0, 0, []
+    previous_value, count = 0, 0
+    rle: list[int] = []
     for pixel in mask.flatten():
         if pixel != previous_value:
             rle.append(count)
@@ -128,7 +129,7 @@ def main():
     show_individual_masks: bool = args.show_individual_masks
     img_name: Optional[str] = args.image_name
 
-    with open(json_path, 'r', encoding="utf-8") as annotations_file:
+    with open(json_path, "r", encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
 
     img_entries: list[Image] = coco_dataset["images"]
@@ -139,8 +140,8 @@ def main():
     nb_imgs = len(img_entries)
     for i, img_entry in enumerate(img_entries, start=1):
         msg = f"Showing image: {img_entry['file_name']} ({i}/{nb_imgs})"
-        print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
-              end='\r' if i != nb_imgs else '\n', flush=True)
+        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
+              end="\r" if i != nb_imgs else "\n", flush=True)
 
         if img_name is not None and img_name != img_entry["file_name"]:
             continue
@@ -163,14 +164,10 @@ def main():
                     # img = cv2.fillPoly(img, [pts], color)
                     raise NotImplementedError("Polygon segmentation is not implemented yet.")
                 else:
-                    # Use match/case here ?  (once linters/type checkers support it.)
                     if isinstance(segmentation["counts"], list):
                         raise NotImplementedError("Mask segmentation is not implemented yet.")
-                    # Encoded RLE
-                    elif isinstance(segmentation["counts"], str):
-                        mask = encoded_rle_to_mask(segmentation["counts"], *segmentation["size"])
                     else:
-                        raise ValueError(f"Unsupported type for count: {type(segmentation['counts'])}")
+                        mask = encoded_rle_to_mask(segmentation["counts"], *segmentation["size"])
                 mask = color * np.expand_dims(mask, -1)
                 if show_individual_masks:
                     show_img(mask, get_class_from_id(annotation["category_id"], categories))
