@@ -1,7 +1,7 @@
 {
   "include": [
-    "utils",
-    "networks"
+    "src",
+    "tests"
   ],
 
   "exclude": [
