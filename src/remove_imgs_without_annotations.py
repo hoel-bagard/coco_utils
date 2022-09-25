@@ -17,11 +17,13 @@ def main():
     parser.add_argument("json_path", type=Path, help="Path to the json file with the coco annotations.")
     parser.add_argument("--output_path", "-o", type=Path, default=None,
                         help="Path for to where the edited json file will be saved. Defaults to inplace editing.")
+    parser.add_argument("--delete_images", "-d", action="store_true", help="Also delete the images.")
     args = parser.parse_args()
 
     data_path: Path = args.data_path
     json_path: Path = args.json_path
     output_path: Path = args.output_path if args.output_path is not None else json_path
+    delete_images: bool = args.delete_images
 
     with open(json_path, "r", encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
@@ -39,7 +41,11 @@ def main():
         if len([ann for ann in annotations if ann["image_id"] == img_entry["id"]]) != 0:
             kept_images.append(img_entry)
         else:
-            (data_path / img_entry["file_name"]).unlink()
+            print(f"\nRemoving the annotation entry for {img_entry['file_name']}.")
+            if delete_images:
+                img_path = data_path / img_entry["file_name"]
+                print(f"Deleting the corresponding image: {img_path}.")
+                img_path.unlink()
 
     # Save the filtered annotations.
     edited_dataset = {
