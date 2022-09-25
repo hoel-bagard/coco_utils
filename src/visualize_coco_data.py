@@ -9,7 +9,7 @@ import numpy as np
 
 from src.types.coco_types import Annotation, Category, Image
 from src.utils.imgs_misc import show_img
-from src.utils.segmentation_conversions import encoded_rle_to_mask
+from src.utils.segmentation_conversions import encoded_rle_to_rle, rle_to_mask
 
 
 def get_class_from_id(cls_id: int, categories: list[Category]) -> str:
@@ -88,7 +88,8 @@ def main():
                     if isinstance(segmentation["counts"], list):
                         raise NotImplementedError("Mask segmentation is not implemented yet.")
                     else:
-                        mask = encoded_rle_to_mask(segmentation["counts"], *segmentation["size"])
+                        rle = encoded_rle_to_rle(segmentation["counts"])
+                        mask = rle_to_mask(rle, *segmentation["size"])
                 mask = color * np.expand_dims(mask, -1)
                 if show_individual_masks:
                     show_img(mask, get_class_from_id(annotation["category_id"], categories))
