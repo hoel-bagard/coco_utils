@@ -3,6 +3,7 @@
 import argparse
 import shutil
 from pathlib import Path
+from typing import Optional
 
 import cv2
 import matplotlib.pyplot as plt
@@ -17,19 +18,24 @@ def main():
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
     parser.add_argument("json_path", type=Path, help="Path to the json file with the coco annotations.")
     parser.add_argument("--show_bbox", "-sb", action="store_true", help="Show the bounding boxes.")
+    parser.add_argument("--image_name", "-i", type=str, default=None,
+                        help="If given, only that image will be displayed.")
     args = parser.parse_args()
 
     data_path: Path = args.data_path
     json_path: Path = args.json_path
     show_bbox: bool = args.show_bbox
+    img_name: Optional[str] = args.image_name
 
     coco = COCO(json_path)
 
-    # Get all images containing given categories.
+    # Get all the image ids.
     img_ids: list[int] = coco.getImgIds()
 
     for i in range(len(img_ids)):
         img_data: Image = coco.loadImgs([img_ids[i]])[0]
+        if img_name is not None and img_name != img_data["file_name"]:
+            continue
         msg = f"Showing image: {img_data['file_name']} ({i+1}/{len(img_ids)})"
         print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
