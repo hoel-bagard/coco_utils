@@ -86,7 +86,7 @@ def main():
                     raise NotImplementedError("Polygon segmentation is not implemented yet.")
                 else:
                     if isinstance(segmentation["counts"], list):
-                        raise NotImplementedError("Mask segmentation is not implemented yet.")
+                        mask = rle_to_mask(segmentation["counts"], *segmentation["size"])
                     else:
                         rle = encoded_rle_to_rle(segmentation["counts"])
                         mask = rle_to_mask(rle, *segmentation["size"])
