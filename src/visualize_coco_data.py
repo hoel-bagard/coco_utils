@@ -1,6 +1,5 @@
 import argparse
 import json
-import shutil
 from pathlib import Path
 from typing import Optional
 
@@ -9,6 +8,7 @@ import numpy as np
 
 from src.types.coco_types import Annotation, Category, Image
 from src.utils.imgs_misc import show_img
+from src.utils.misc import clean_print
 from src.utils.segmentation_conversions import encoded_rle_to_rle, rle_to_mask
 
 
@@ -60,9 +60,7 @@ def main():
     bbox_thickness = 2
     nb_imgs = len(img_entries)
     for i, img_entry in enumerate(img_entries, start=1):
-        msg = f"Showing image: {img_entry['file_name']} ({i}/{nb_imgs})"
-        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
-              end="\r" if i != nb_imgs else "\n", flush=True)
+        clean_print(f"Showing image: {img_entry['file_name']} ({i}/{nb_imgs})", end="\r" if i != nb_imgs else "\n")
 
         if img_name is not None and img_name != img_entry["file_name"]:
             continue

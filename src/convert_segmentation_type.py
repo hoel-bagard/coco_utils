@@ -13,6 +13,7 @@ from pathlib import Path
 
 import src.utils.segmentation_conversions as cvt
 from src.types.coco_types import Annotation, Category, Image
+from src.utils.misc import clean_print
 
 
 def main():
@@ -36,9 +37,10 @@ def main():
     annotations: list[Annotation] = coco_dataset["annotations"]
     categories: list[Category] = coco_dataset["categories"]
 
-    print(f"Loaded a json file containing {len(annotations)} annotations. Converting them to {format} format.")
-
+    nb_annotations = len(annotations)
+    print(f"Loaded a json file containing {nb_annotations} annotations. Converting them to {format} format.")
     for i, annotation in enumerate(annotations):
+        clean_print(f"Processing entry: ({i+1}/{nb_annotations})", end="\r" if i+1 != nb_annotations else "\n")
         assert "segmentation" in annotation, f"No segmentation found for annotation {annotation}"
         segmentation = annotation["segmentation"]
         if isinstance(segmentation, list):
