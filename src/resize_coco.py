@@ -91,7 +91,7 @@ def main():
     new_width, new_height = size
 
     # Load the dataset
-    with open(args.annotations, 'r', encoding="utf-8") as annotations_file:
+    with open(args.annotations, "r", encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
     images: list[Image] = coco_dataset["images"]
     annotations: list[Annotation] = coco_dataset["annotations"]
@@ -142,7 +142,7 @@ def main():
         for _ in pool.imap(worker, mp_args, chunksize=10):
             nb_images_processed += 1
             msg = f"Processing status: ({nb_images_processed}/{nb_imgs})"
-            print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
+            print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
     # Save the resized annotations
     resized_dataset = {
@@ -151,11 +151,11 @@ def main():
         "categories": categories
     }
     output_path.mkdir(parents=True, exist_ok=True)
-    with open(output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(output_path / "annotations.json", "w", encoding="utf-8") as json_file:
         json.dump(resized_dataset, json_file, indent=4)
 
     msg = "Finished resizing dataset."
-    print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
+    print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
 
 
 if __name__ == "__main__":

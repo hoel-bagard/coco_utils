@@ -33,11 +33,11 @@ def main():
     img_output_path.mkdir(parents=True, exist_ok=True)
 
     exts = (".png", ".jpg", ".bmp")
-    img_paths = [path for path in data_path.rglob('*') if path.suffix in exts]
+    img_paths = [path for path in data_path.rglob("*") if path.suffix in exts]
     nb_imgs = len(img_paths)
     for i, img_path in enumerate(img_paths, start=1):
         msg = f"Processing image: {img_path.name} ({i}/{nb_imgs})"
-        print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
+        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
         file_output_path = img_output_path / img_path.name
         xml_modified = False

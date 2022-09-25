@@ -43,7 +43,7 @@ def main():
         val_images: list[Image] = list(images[indexes[int(number_of_images*split):]])
     else:
         val_img_names = []
-        with open(spec_file_path, 'r', encoding="utf-8") as spec_file:
+        with open(spec_file_path, "r", encoding="utf-8") as spec_file:
             for line in spec_file:
                 val_img_names.append(line.strip())
 
@@ -73,7 +73,7 @@ def main():
     }
     train_output_path: Path = output_path / "train"
     train_output_path.mkdir(parents=True, exist_ok=True)
-    with open(train_output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(train_output_path / "annotations.json", "w", encoding="utf-8") as json_file:
         json.dump(train_dataset, json_file, indent=4)
 
     # Save new validation annotations
@@ -84,7 +84,7 @@ def main():
     }
     val_output_path: Path = output_path / "validation"
     val_output_path.mkdir(parents=True, exist_ok=True)
-    with open(val_output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(val_output_path / "annotations.json", "w", encoding="utf-8") as json_file:
         json.dump(val_dataset, json_file, indent=4)
 
     print(f"Saved {len(train_images)} entries to {train_output_path} and {len(val_images)} to {val_output_path}")

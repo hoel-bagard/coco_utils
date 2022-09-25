@@ -52,7 +52,7 @@ def main():
     print(f"Saving the edited json to {output_path}")
     # import shutil
     # shutil.move(json_path, json_path.parent / "original_ids_annotations.json")
-    with open(output_path, 'w', encoding="utf-8") as json_file:
+    with open(output_path, "w", encoding="utf-8") as json_file:
         json.dump(edited_dataset, json_file, indent=4)
 
     print("Finished processing the dataset.")

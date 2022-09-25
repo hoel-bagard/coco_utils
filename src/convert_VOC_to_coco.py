@@ -98,7 +98,7 @@ def main():
     nb_imgs = len(xml_paths)
     for i, xml_path in enumerate(xml_paths, start=0):
         msg = f"Processing image: {xml_path.name} ({i+1}/{nb_imgs})"
-        print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
+        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
         filename, width, height, objects = parse_voc2007_annotation(xml_path)
 
@@ -138,7 +138,7 @@ def main():
 
     output_path: Path = args.output_path if args.output_path else args.data_path.parent / "coco_annotations.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w', encoding="utf-8") as json_file:
+    with open(output_path, "w", encoding="utf-8") as json_file:
         json.dump(coco_dataset, json_file, indent=4)
 
     print(f"Saved the coco annotations to {output_path}")

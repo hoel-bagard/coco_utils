@@ -37,10 +37,10 @@ def main():
         for _result in pool.imap(worker, image_paths, chunksize=10):
             nb_images_processed += 1
             msg = f"Processing status: ({nb_images_processed}/{nb_imgs})"
-            print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
+            print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
     msg = "Finished processing images."
-    print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
+    print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
 
 
 if __name__ == "__main__":

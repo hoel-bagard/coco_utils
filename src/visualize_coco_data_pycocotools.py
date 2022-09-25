@@ -29,7 +29,7 @@ def main():
     for i in range(len(img_ids)):
         img_data: Image = coco.loadImgs([img_ids[i]])[0]  # type: ignore
         msg = f"Showing image: {img_data['file_name']} ({i+1}/{len(img_ids)})"
-        print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end='\r', flush=True)
+        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
         ann_ids: list[int] = coco.getAnnIds(imgIds=[img_data["id"]])
         anns: list[Annotation] = coco.loadAnns(ann_ids)  # type: ignore
@@ -44,7 +44,7 @@ def main():
                                     (255, 0, 0), 5)
 
         plt.imshow(img)
-        plt.axis('off')
+        plt.axis("off")
         coco.showAnns(anns)
         plt.show()
 

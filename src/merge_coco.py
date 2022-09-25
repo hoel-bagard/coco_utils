@@ -32,7 +32,7 @@ def main():
     new_annotation_id = 0
     for i, annotation_path in enumerate(annotations_paths):
         print(f"Processing file {annotation_path}")
-        with open(annotation_path, 'r', encoding="utf-8") as annotations_file:
+        with open(annotation_path, "r", encoding="utf-8") as annotations_file:
             coco_dataset = json.load(annotations_file)
         images: list[Image] = coco_dataset["images"]
         annotations: list[Annotation] = coco_dataset["annotations"]
@@ -42,8 +42,8 @@ def main():
         assert (annotation_path.parent / "images").exists, f"No images found for annotations {annotation_path}"
         for img_entry in images:
             msg = f"Processing entry: {img_entry['file_name']} ({i}/{nb_imgs})"
-            print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
-                  end='\r' if i != nb_imgs else '\n', flush=True)
+            print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
+                  end="\r" if i != nb_imgs else "\n", flush=True)
 
             filename = img_entry["file_name"]
             if change_names:
@@ -76,11 +76,11 @@ def main():
         "categories": merged_categories
     }
 
-    with open(output_path / "annotations.json", 'w', encoding="utf-8") as json_file:
+    with open(output_path / "annotations.json", "w", encoding="utf-8") as json_file:
         json.dump(merged_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."
-    print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
+    print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)))
 
 
 if __name__ == "__main__":

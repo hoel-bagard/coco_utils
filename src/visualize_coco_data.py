@@ -129,7 +129,7 @@ def main():
     show_individual_masks: bool = args.show_individual_masks
     img_name: Optional[str] = args.image_name
 
-    with open(json_path, 'r', encoding="utf-8") as annotations_file:
+    with open(json_path, "r", encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
 
     img_entries: list[Image] = coco_dataset["images"]
@@ -140,8 +140,8 @@ def main():
     nb_imgs = len(img_entries)
     for i, img_entry in enumerate(img_entries, start=1):
         msg = f"Showing image: {img_entry['file_name']} ({i}/{nb_imgs})"
-        print(msg + ' ' * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
-              end='\r' if i != nb_imgs else '\n', flush=True)
+        print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)),
+              end="\r" if i != nb_imgs else "\n", flush=True)
 
         if img_name is not None and img_name != img_entry["file_name"]:
             continue
