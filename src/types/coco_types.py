@@ -8,14 +8,17 @@ class Image(TypedDict):
     file_name: str
 
 
-class EncodedRLE(TypedDict):
-    size: list[int]
-    counts: str
+TPolygon_segmentation = list[list[float]]
 
 
 class RLE(TypedDict):
     size: list[int]
     counts: list[int]
+
+
+class EncodedRLE(TypedDict):
+    size: list[int]
+    counts: str
 
 
 class Annotation(TypedDict):
@@ -24,8 +27,9 @@ class Annotation(TypedDict):
     category_id: int
     # Segmentation can be a polygon, RLE or encoded RLE.
     # Exemple of polygon: "segmentation": [[510.66,423.01,511.72,420.03,...,510.45,423.01]]
+    # Exemple of RLE: "segmentation": {"size": [40, 40], "counts": [245, 5, 35, 5, 35, 5, 35, 5, 35, 5, 1190]}
     # Exemple of encoded RLE: "segmentation": {"size": [480, 640], "counts": "aUh2b0X...BgRU4"}
-    segmentation: list[list[float]] | EncodedRLE | RLE
+    segmentation: TPolygon_segmentation | RLE | EncodedRLE
     area: float
     # The COCO bounding box format is [top left x position, top left y position, width, height].
     # bbox exemple:  "bbox": [473.07,395.93,38.65,28.67]
