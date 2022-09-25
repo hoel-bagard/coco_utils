@@ -7,7 +7,7 @@ Requires python version >= 3.9
 
 ### Clone the repository
 ```
-git clone git@github.com:hoel-bagard/coco_utils.git
+git clone git@github.com:hoel-bagard/coco_utils.git --recurse-submodules
 ```
 
 #### Convert

@@ -1,0 +1,213 @@
+{
+  "images": [
+    {
+      "id": 0,
+      "file_name": "square.png",
+      "width": 400,
+      "height": 400,
+      "date_captured": "2022-09-25 19:24:00",
+      "coco_url": "",
+      "flickr_url": ""
+    },
+    {
+      "id": 1,
+      "file_name": "disk.png",
+      "width": 500,
+      "height": 400,
+      "date_captured": "2022-09-25 19:24:01",
+      "coco_url": "",
+      "flickr_url": ""
+    },
+    {
+      "id": 2,
+      "file_name": "polygon.png",
+      "width": 400,
+      "height": 400,
+      "date_captured": "2022-09-25 19:24:02",
+      "coco_url": "",
+      "flickr_url": ""
+    }
+  ],
+  "annotations": [
+    {
+      "id": 0,
+      "image_id": 0,
+      "category_id": 1,
+      "segmentation": {
+        "size": [
+          400,
+          400
+        ],
+        "counts": [
+          24050,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          350,
+          50,
+          116300
+        ]
+      },
+      "area": 2500,
+      "iscrowd": 0,
+      "bbox": [
+        60.0,
+        50.0,
+        50.0,
+        50.0
+      ]
+    },
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 0,
+      "segmentation": {
+        "size": [
+          400,
+          400
+        ],
+        "counts": "TODO: encoded RLE"
+      },
+      "area": 19667,
+      "iscrowd": 0,
+      "bbox": [
+        10.0,
+        0.0,
+        201.0,
+        119.0
+      ]
+    },
+    {
+      "id": 2,
+      "image_id": 2,
+      "category_id": 2,
+      "segmentation": [
+        [
+          1,
+          2,
+          3,
+          " TODO: Polygon"
+        ]
+      ],
+      "area": 19667,
+      "iscrowd": 0,
+      "bbox": [
+        10.0,
+        0.0,
+        201.0,
+        119.0
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "supercategory": "object",
+      "id": 0,
+      "name": "disk"
+    },
+    {
+      "supercategory": "object",
+      "id": 1,
+      "name": "square"
+    },
+    {
+      "supercategory": "object",
+      "id": 2,
+      "name": "polygon"
+    }
+  ]
+}
