@@ -91,7 +91,7 @@ def main():
                 mask = color * np.expand_dims(mask, -1)
                 if show_individual_masks:
                     show_img(mask, get_class_from_id(annotation["category_id"], categories))
-                img = cv2.addWeighted(img, 0.7, mask, 0.3, 0.0)
+                img = np.where(mask, 0.3*mask + 0.7*img, img).astype(np.uint8)
 
             # Add the bounding boxes to the image
             if show_bbox:
