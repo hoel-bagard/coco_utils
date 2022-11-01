@@ -29,8 +29,8 @@ def main():
     # Get all the image ids.
     img_ids = coco.getImgIds()
 
-    for i in range(len(img_ids)):
-        img_data = coco.loadImgs([img_ids[i]])[0]
+    for i, img_id in enumerate(img_ids):
+        img_data = coco.loadImgs([img_id])[0]
         if img_name is not None and img_name != img_data["file_name"]:
             continue
         msg = f"Showing image: {img_data['file_name']} ({i+1}/{len(img_ids)})"
