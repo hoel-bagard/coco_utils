@@ -41,6 +41,7 @@ def main():
 
         # Load an image and its corresponding instance annotations then display it
         img = cv2.imread(str(data_path / img_data["file_name"]))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if show_bbox:
             # Add the bounding box to the image
             for annotation in anns:
