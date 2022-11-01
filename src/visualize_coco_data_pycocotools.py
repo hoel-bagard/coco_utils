@@ -1,4 +1,3 @@
-# type: ignore[reportUnknownVariableType]
 """Script to visualize the labels of a coco-like dataset using the official coco api."""
 import argparse
 import shutil
@@ -8,8 +7,6 @@ from typing import Optional
 import cv2
 import matplotlib.pyplot as plt
 from pycocotools.coco import COCO
-
-from src.types.coco_types import Annotation, Image
 
 
 def main():
@@ -30,17 +27,17 @@ def main():
     coco = COCO(json_path)
 
     # Get all the image ids.
-    img_ids: list[int] = coco.getImgIds()
+    img_ids = coco.getImgIds()
 
     for i in range(len(img_ids)):
-        img_data: Image = coco.loadImgs([img_ids[i]])[0]
+        img_data = coco.loadImgs([img_ids[i]])[0]
         if img_name is not None and img_name != img_data["file_name"]:
             continue
         msg = f"Showing image: {img_data['file_name']} ({i+1}/{len(img_ids)})"
         print(msg + " " * (shutil.get_terminal_size(fallback=(156, 38)).columns - len(msg)), end="\r", flush=True)
 
-        ann_ids: list[int] = coco.getAnnIds(imgIds=[img_data["id"]])
-        anns: list[Annotation] = coco.loadAnns(ann_ids)
+        ann_ids = coco.getAnnIds(imgIds=[img_data["id"]])
+        anns = coco.loadAnns(ann_ids)
 
         # Load an image and its corresponding instance annotations then display it
         img = cv2.imread(str(data_path / img_data["file_name"]))
