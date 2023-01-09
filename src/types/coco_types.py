@@ -18,7 +18,7 @@ class RLE(TypedDict):
 
 class EncodedRLE(TypedDict):
     size: list[int]
-    counts: str
+    counts: str | bytes
 
 
 class Annotation(TypedDict):
