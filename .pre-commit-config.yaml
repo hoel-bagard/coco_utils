@@ -37,7 +37,7 @@ repos:
     rev: v1.1.271
     hooks:
     - id: pyright
-      additional_dependencies: ["opencv-python", "pycocotools", "matplotlib"]
+      additional_dependencies: ["opencv-python", "pycocotools", "matplotlib", "pydantic"]
 
   # - repo: https://github.com/PyCQA/isort
   #   rev: 5.10.1
