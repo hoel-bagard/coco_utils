@@ -1,10 +1,52 @@
-[tool.pytest.ini_options]
-# https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html
-addopts = [
-    "--import-mode=importlib",
+[build-system]
+requires = [
+    "setuptools >=67.3.2",
+    "wheel >=0.38.4",
 ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coco_utils"
+version = "0.1"
+dependencies = ["opencv-python", "numpy", "matplotlib", "pydantic"]
+# dependencies = ["pydantic"]
+authors = [{name="Bagard Hoel"}]
+description = "Utility tools for handling COCO datasets."
+keywords = ["COCO", "COCO dataset"]
+readme = "docs/package_readme.md"
+requires-python = ">=3.9"
+classifiers = [
+            "License :: OSI Approved :: MIT License",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Operating System :: OS Independent",
+            "Intended Audience :: Developers",
+]
+license = {text = "MIT"}
+
+# [tool.setuptools]
+# package-dir = {"" = "src/types"}
+# [tool.setuptools.packages.find]
+# where = ["src"]
+# include = ["types"]
+# namespaces = false
+
+[project.urls]
+"Homepage" = "https://github.com/hoel-bagard/coco_utils"
+"Bug Tracker" = "https://github.com/hoel-bagard/coco_utils/issues"
+
+[project.optional-dependencies]
+test = ["pytest"]
+dev = ["pre-commit", "pip-tools", "flake8", "flake8-docstrings", "pep8-naming", "flake8-import-order", "flake8-bugbear", "flake8-quotes", "flake8-comprehensions"]
 
 [tool.isort]
 line_length = 120
 case_sensitive = false
 order_by_type = false
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html
+addopts = [
+    "--import-mode=importlib",
+]

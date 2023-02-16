@@ -4,7 +4,7 @@ import numpy.typing as npt
 from src.types.img_types import Tmask
 
 
-def encoded_rle_to_rle(encoded_count_rle: str) -> npt.NDArray[np.uint32]:
+def encoded_rle_to_rle(encoded_count_rle: str | bytes) -> npt.NDArray[np.uint32]:
     """Decode encoded rle segmentation information into a rle.
 
     See the (hard to read) implementation:
@@ -24,7 +24,10 @@ def encoded_rle_to_rle(encoded_count_rle: str) -> npt.NDArray[np.uint32]:
     Returns:
         The decoded RLE list.
     """
-    bytes_rle = str.encode(encoded_count_rle, encoding="ascii")
+    if isinstance(encoded_count_rle, str):
+        bytes_rle = str.encode(encoded_count_rle, encoding="ascii")
+    else:
+        bytes_rle = encoded_count_rle
 
     # Get the RLE from the encoded RLE.
     current_count_idx, current_byte_idx, counts = 0, 0, np.zeros(len(encoded_count_rle), dtype=np.uint32)
