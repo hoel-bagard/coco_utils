@@ -6,7 +6,7 @@ from typing import Optional
 
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+import rpycocotools
 from rpycocotools import COCO
 
 from src.utils.imgs_misc import show_img
@@ -28,10 +28,11 @@ def main():
     img_name: Optional[str] = args.image_name
 
     rng = np.random.default_rng()
-    coco = COCO(json_path, data_path)
+    coco = COCO(str(json_path), str(data_path))
+    img_entries = coco.get_imgs()
 
-    nb_samples= len(coco.imgs)
-    for i, img_entry in enumerate(coco.imgs):
+    nb_samples= len(img_entries)
+    for i, img_entry in enumerate(img_entries):
         if img_name is not None and img_name != img_entry.file_name:
             continue
 
@@ -42,15 +43,15 @@ def main():
         img = cv2.imread(str(data_path / img_entry.file_name))
         anns = coco.get_img_anns(img_entry.id)
         color = rng.integers(0, high=255, size=3, dtype=np.uint8)
-        if show_bbox:
-            # Add the bounding box to the image
-            for annotation in anns:
+        for annotation in anns:
+            if show_bbox:
                 top_x, top_y, width, height = annotation.bbox
                 img = cv2.rectangle(img, (int(top_x), int(top_y)), (int(top_x+width), int(top_y+height)),
                                     (255, 0, 0), 5)
 
-        mask = color * np.expand_dims(mask, -1)
-        img = np.where(mask, 0.3*mask + 0.7*img, img).astype(np.uint8)
+            mask = rpycocotools.mask.decode_poly_rs(annotation.segmentation)
+            mask = color * np.expand_dims(mask, -1)
+            img = np.where(mask, 0.3*mask + 0.7*img, img).astype(np.uint8)
 
         show_img(img, img_entry.file_name)
 
