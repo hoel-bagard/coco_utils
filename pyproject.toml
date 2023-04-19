@@ -31,7 +31,8 @@ markers = ["pycocotools"]
 
 [tool.ruff]
 select = ["A", "B", "C4", "E", "I", "Q", "UP", "ANN", "S", "BLE", "COM", "DTZ", "PIE", "PT", "RSE", "SIM","PTH", "NPY", "RUF"]
-ignore = ["D1", "D401", "D204", "D203", "D213", "S101", "A002", "A003"]
+ignore = ["ANN101", "D1", "D401", "D204", "D203", "D213", "S101", "A002", "A003", "S314", "S311"]
+exclude = ["typings"]
 line-length = 120
 
 [tool.ruff.isort]

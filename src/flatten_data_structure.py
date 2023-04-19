@@ -2,11 +2,11 @@
 import argparse
 import random
 import shutil
-import xml.etree.ElementTree as ET  # noqa: N817
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Flattens a dataset by putting all the images in one folder.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path, help="Path to the dataset")
@@ -75,7 +75,7 @@ def main():
             if not xml_modified:
                 moving_fn(xml_path, labels_output_path / xml_path.name)
             else:
-                with open(labels_output_path / xml_path.name, "wb") as f:
+                with (labels_output_path / xml_path.name).open("wb") as f:
                     tree.write(f)  # type: ignore
 
     print("\nFinished!")

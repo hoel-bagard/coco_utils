@@ -2,24 +2,25 @@ import argparse
 from pathlib import Path
 from typing import Optional
 
-import pycocotools.mask
-import pycocotools
 import cv2
 import numpy as np
-from coco_types import DatasetKP, COCO_RLE
+import pycocotools
+import pycocotools.mask
+from coco_types import COCO_RLE, DatasetKP
 
 from src.utils.imgs_misc import show_img
 from src.utils.misc import clean_print
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=("Tool to visualize coco labels. "
                                                   "Use with 'python -m src.visualize_coco_data <path to image folder> "
                                                   "<path to json annotation file>'"),
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--annotations_path", "-a", required=True, type=Path,
                         help="Path to the json file with the coco annotations.")
-    parser.add_argument("--imgs_folder_path", "-i", required=True, type=Path, help="Path to the directory with the images.")
+    parser.add_argument("--imgs_folder_path", "-i", required=True, type=Path,
+                        help="Path to the directory with the images.")
     parser.add_argument("--show_bbox", "-sb", action="store_true", help="Show the bounding boxes.")
     parser.add_argument("--image_name", "-n", type=str, default=None,
                         help="If given, only that image will be displayed.")
@@ -32,7 +33,7 @@ def main():
 
     with annotations_path.open("r", encoding="utf-8") as annotations_file:
         dataset = DatasetKP.parse_raw(annotations_file.read())
-
+    rng = np.random.default_rng()
     categories = {cat.id: cat.name for cat in dataset.categories}
 
     bbox_thickness = 2
@@ -47,7 +48,7 @@ def main():
 
         img_annotations = [ann for ann in dataset.annotations if ann.image_id == img_entry.id]
         for ann in img_annotations:
-            color = np.random.randint(0, high=255, size=3, dtype=np.uint8)
+            color = rng.integers(0, high=255, size=3, dtype=np.uint8)
             # Add the segmentation masks
             assert isinstance(ann.segmentation, COCO_RLE)
             mask = pycocotools.mask.decode({"size": ann.segmentation.size, "counts": ann.segmentation.counts})

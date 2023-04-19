@@ -7,6 +7,6 @@ setup(
     install_requires=[
         "opencv-python",
         "matplotlib",
-        "pycocotools"
+        "pycocotools",
     ],
 )

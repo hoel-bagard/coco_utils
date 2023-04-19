@@ -8,20 +8,17 @@ from src.types.coco_types import Annotation, Image
 
 def is_duplicate(list_to_check: list[Image] | list[Annotation], key: str, elt_id: str) -> bool:
     """Checks if the given id is already in the list."""
-    for entry in list_to_check:
-        if entry[key] == elt_id:
-            return True
-    return False
+    return any(entry[key] == elt_id for entry in list_to_check)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=("Changes image ids in a coco dataset from strings to ints."
                                                   "Also removes duplicate entries."))
     parser.add_argument("annotations", type=Path, help="Path to COCO annotations file.")
     args = parser.parse_args()
 
     # Load the dataset
-    with open(args.annotations, encoding="utf-8") as annotations:
+    with args.annotations.open(encoding="utf-8") as annotations:
         coco_dataset = json.load(annotations)
     images = coco_dataset["images"]
     annotations = coco_dataset["annotations"]
@@ -53,10 +50,10 @@ def main():
     corrected_dataset = {
         "images": no_duplicate_images,
         "annotations": no_duplicate_annotations,
-        "categories": categories
+        "categories": categories,
     }
     shutil.move(args.annotations, args.annotations.parent / "original_ids_annotations.json")
-    with open(args.annotations.parent / "annotations.json", "w", encoding="utf-8") as json_file:
+    with (args.annotations.parent / "annotations.json").open("w", encoding="utf-8") as json_file:
         json.dump(corrected_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."

@@ -17,7 +17,7 @@ from src.types.coco_types import Annotation, Category, Image
 from src.utils.misc import clean_print
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Script to convert one segmentation type to another..",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("json_path", type=Path, help="Path to COCO annotations file.")
@@ -32,7 +32,7 @@ def main():
     output_path: Path = args.output_path if args.output_path is not None else json_path
 
     # Load the dataset
-    with open(json_path, encoding="utf-8") as annotations_file:
+    with json_path.open(encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
     images: list[Image] = coco_dataset["images"]
     annotations: list[Annotation] = coco_dataset["annotations"]
@@ -46,9 +46,9 @@ def main():
         segmentation = annotation["segmentation"]
         if isinstance(segmentation, list):
             if sef_format == "rle":
-                raise NotImplementedError("RLE -> Encoded RLE is not implemented yet.")
+                raise NotImplementedError("Polygons -> RLE is not implemented yet.")
             elif sef_format == "encoded_rle":
-                raise NotImplementedError("RLE -> Encoded RLE is not implemented yet.")
+                raise NotImplementedError("Polygons -> Encoded RLE is not implemented yet.")
             raise NotImplementedError("Polygon segmentation is not implemented yet.")
         else:
             if isinstance(segmentation["counts"], list):
@@ -67,11 +67,11 @@ def main():
     edited_dataset = {
         "images": images,
         "annotations": annotations,
-        "categories": categories
+        "categories": categories,
     }
 
     print(f"Saving the edited json to: '{output_path}'")
-    with open(output_path, "w", encoding="utf-8") as json_file:
+    with output_path.open("w", encoding="utf-8") as json_file:
         json.dump(edited_dataset, json_file, indent=4)
 
     print("Finished processing the dataset.")

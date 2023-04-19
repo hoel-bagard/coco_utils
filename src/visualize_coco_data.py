@@ -31,7 +31,7 @@ def get_class_from_id(cls_id: int, categories: list[Category]) -> str:
     raise ValueError(f"There is no class with the id {cls_id}")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=("Tool to visualize coco labels. "
                                                   "Use with 'python -m src.visualize_coco_data <path to image folder> "
                                                   "<path to json annotation file>'"),
@@ -50,8 +50,9 @@ def main():
     show_individual_masks: bool = args.show_individual_masks
     img_name: Optional[str] = args.image_name
 
-    with open(json_path, "r", encoding="utf-8") as annotations_file:
+    with json_path.open(encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
+    rng = np.random.default_rng()
 
     img_entries: list[Image] = coco_dataset["images"]
     annotations: list[Annotation] = coco_dataset["annotations"]
@@ -70,7 +71,7 @@ def main():
         img_annotations = [annotation for annotation in annotations
                            if annotation["image_id"] == img_entry["id"]]
         for annotation in img_annotations:
-            color = np.random.randint(0, high=255, size=3, dtype=np.uint8)
+            color = rng.integers(0, high=255, size=3, dtype=np.uint8)
             # Add the segmentation masks
             if "segmentation" in annotation:
                 segmentation = annotation["segmentation"]

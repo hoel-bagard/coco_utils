@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from pycocotools.coco import COCO
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Tool to visualize coco labels.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")

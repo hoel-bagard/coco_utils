@@ -11,7 +11,7 @@ import numpy as np
 from src.types.coco_types import Annotation, Category, Image
 
 
-def worker(args: tuple[Image, Path, Path, int, int]):
+def worker(args: tuple[Image, Path, Path, int, int]) -> None:
     """Worker in charge of resizing an image.
 
     Args:
@@ -75,7 +75,7 @@ def get_img_from_id(images: list[Image], img_id: int) -> Image:
     raise ValueError(f"No image with id {img_id} is present in the dataset.")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Resizes the images labels of a COCO dataset.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path, help="Path to the directory with the images.")
@@ -91,7 +91,7 @@ def main():
     new_width, new_height = size
 
     # Load the dataset
-    with open(args.annotations, "r", encoding="utf-8") as annotations_file:
+    with args.annotations.open(encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
     images: list[Image] = coco_dataset["images"]
     annotations: list[Annotation] = coco_dataset["annotations"]
@@ -108,7 +108,7 @@ def main():
             "id": image["id"],
             "width": new_width,
             "height": new_height,
-            "file_name": image["file_name"]
+            "file_name": image["file_name"],
         }
         resized_images.append(resized_image)
 
@@ -130,7 +130,7 @@ def main():
             "segmentation": [new_segmentation],
             "area": new_area,
             "bbox": new_bbox,
-            "iscrowd": annotation["iscrowd"]
+            "iscrowd": annotation["iscrowd"],
         }
         resized_annotations.append(annotation)
 
@@ -148,10 +148,10 @@ def main():
     resized_dataset = {
         "images": resized_images,
         "annotations": resized_annotations,
-        "categories": categories
+        "categories": categories,
     }
     output_path.mkdir(parents=True, exist_ok=True)
-    with open(output_path / "annotations.json", "w", encoding="utf-8") as json_file:
+    with (output_path / "annotations.json").open("w", encoding="utf-8") as json_file:
         json.dump(resized_dataset, json_file, indent=4)
 
     msg = "Finished resizing dataset."

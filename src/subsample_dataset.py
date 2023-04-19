@@ -6,7 +6,7 @@ from pathlib import Path
 from src.types.coco_types import Annotation, Category, Image
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Create a smaller dataset by keeping a smaller id range.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("annotations_path", type=Path, help="Path to the COCO annotations file.")
@@ -29,7 +29,7 @@ def main():
     output_path.mkdir(parents=True, exist_ok=True)
 
     # Load the dataset
-    with open(annotations_path, encoding="utf-8") as annotations_file:
+    with annotations_path.open(encoding="utf-8") as annotations_file:
         coco_dataset = json.load(annotations_file)
     images: list[Image] = coco_dataset["images"]
     annotations: list[Annotation] = coco_dataset["annotations"]
@@ -48,9 +48,9 @@ def main():
     new_dataset = {
         "images": new_images,
         "annotations": new_annotations,
-        "categories": categories
+        "categories": categories,
     }
-    with open(output_path / "annotations.json", "w", encoding="utf-8") as json_file:
+    with (output_path / "annotations.json").open("w", encoding="utf-8") as json_file:
         json.dump(new_dataset, json_file, indent=4)
 
     print(f"Saved {len(new_images)} entries to {output_path}")

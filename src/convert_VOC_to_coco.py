@@ -3,14 +3,14 @@
 import argparse
 import json
 import shutil
-import xml.etree.ElementTree as ET  # noqa: N817
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Union
 
 from src.types.coco_types import Annotation, Category, Image
 
 
-def parse_voc2007_annotation(xml_path: Union[str, Path]
+def parse_voc2007_annotation(xml_path: Union[str, Path],
                              ) -> tuple[str, int, int, list[tuple[str, tuple[int, int, int, int]]]]:
     """Takes a path to an xml file and parses it to return the relevant information.
 
@@ -65,7 +65,7 @@ def get_all_classes(xmls_path: list[Path]) -> list[str]:
     return list(classes)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Tool to convert PascalVOC format to coco format",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("data_path", type=Path,
@@ -90,7 +90,7 @@ def main():
         categories.append({
             "id": cls_id,
             "name": cls_name,
-            "supercategory": cls_name
+            "supercategory": cls_name,
         })
         cls_name_to_id[cls_name] = cls_id
 
@@ -106,7 +106,7 @@ def main():
             "id": i,
             "width": width,
             "height": height,
-            "file_name": filename
+            "file_name": filename,
         }
         images.append(sample_image)
 
@@ -125,7 +125,7 @@ def main():
                          bbox[1],   # Top left y position
                          width,  # Width
                          height],  # Height
-                "iscrowd": 0
+                "iscrowd": 0,
             }
             bb_id += 1
             annotations.append(annotation)
@@ -133,12 +133,12 @@ def main():
     coco_dataset = {
         "images": images,
         "annotations": annotations,
-        "categories": categories
+        "categories": categories,
     }
 
     output_path: Path = args.output_path if args.output_path else args.data_path.parent / "coco_annotations.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as json_file:
+    with output_path.open("w", encoding="utf-8") as json_file:
         json.dump(coco_dataset, json_file, indent=4)
 
     print(f"Saved the coco annotations to {output_path}")

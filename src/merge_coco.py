@@ -6,7 +6,7 @@ from pathlib import Path
 from src.types.coco_types import Annotation, Category, Image
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=("Merges several coco label files into one."
                                                   "If also renaming the files, it is assumed the images are in an "
                                                   "'images' folder next to the annotations file. The images will "
@@ -32,7 +32,7 @@ def main():
     new_annotation_id = 0
     for i, annotation_path in enumerate(annotations_paths):
         print(f"Processing file {annotation_path}")
-        with open(annotation_path, "r", encoding="utf-8") as annotations_file:
+        with annotation_path.open(encoding="utf-8") as annotations_file:
             coco_dataset = json.load(annotations_file)
         images: list[Image] = coco_dataset["images"]
         annotations: list[Annotation] = coco_dataset["annotations"]
@@ -73,10 +73,10 @@ def main():
     merged_dataset = {
         "images": merged_images,
         "annotations": merged_annotations,
-        "categories": merged_categories
+        "categories": merged_categories,
     }
 
-    with open(output_path / "annotations.json", "w", encoding="utf-8") as json_file:
+    with (output_path / "annotations.json").open("w", encoding="utf-8") as json_file:
         json.dump(merged_dataset, json_file, indent=4)
 
     msg = "Finished processing dataset."

@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 
 
-def worker(args: tuple[Path]):
+def worker(args: tuple[Path]) -> None:
     """Worker in charge of converting an image into a 3 channels grayscale.
 
     Args:
@@ -21,7 +21,7 @@ def worker(args: tuple[Path]):
     cv2.imwrite(str(img_path), img)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=("Converts all images in a folder to grayscale (but still 3 channels)."
                                                   " Note: the transformation is done in place."))
     parser.add_argument("dir_path", type=Path, help="Path to the folder with the images.")
