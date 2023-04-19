@@ -1,10 +1,79 @@
+[project]
+name = "coco_utils"
+authors = [{name="Bagard Hoel"}]
+description = "Utils for handling COCO datasets."
+keywords = ["COCO", "COCO dataset"]
+readme = "README.md"
+classifiers = [
+            "License :: OSI Approved :: MIT License",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Operating System :: OS Independent",
+            "Intended Audience :: Developers",
+]
+license = {text = "MIT"}
+dynamic = ["version"]
+dependencies = ["opencv-python", "matplotlib", "pycocotools", "coco-types"]
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+test = ["pytest"]
+dev = ["pre-commit", "pip-tools", "ruff", "pyright", "pycocotools-stubs", "opencv-stubs"]
+
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html
 addopts = [
     "--import-mode=importlib",
+    "--strict-markers"
 ]
+markers = ["pycocotools"]
 
-[tool.isort]
-line_length = 120
-case_sensitive = false
-order_by_type = false
+[tool.ruff]
+select = ["A", "B", "C4", "E", "I", "Q", "UP", "ANN", "S", "BLE", "COM", "DTZ", "PIE", "PT", "RSE", "SIM","PTH", "NPY", "RUF"]
+ignore = ["D1", "D401", "D204", "D203", "D213", "S101", "A002", "A003"]
+line-length = 120
+
+[tool.ruff.isort]
+order-by-type = false
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.pyright]
+include = ["src"]
+
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true
+
+reportMissingModuleSource = false
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnusedImport = true
+reportUnusedClass = "warning"
+reportUnusedFunction = "warning"
+reportUnusedVariable = "warning"
+reportDuplicateImport = "warning"
+reportUntypedNamedTuple = "warning"
+reportUntypedFunctionDecorator = "warning"
+reportUntypedClassDecorator = "warning"
+reportMissingSuperCall = false
+reportUnknownArgumentType = "warning"
+reportUnknownLambdaType = "warning"
+reportUnknownVariableType = "warning"
+reportUnknownMemberType = false
+reportMissingParameterType = "warning"
+reportMissingTypeArgument = "warning"
+reportCallInDefaultInitializer = false
+reportUnnecessaryIsInstance = "warning"
+reportUnnecessaryCast = "warning"
+reportUnnecessaryComparison = "warning"
+reportImplicitStringConcatenation = false
+reportUnusedCallResult = false
+reportUnusedExpression = "warning"
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportMatchNotExhaustive = "warning"
+
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
