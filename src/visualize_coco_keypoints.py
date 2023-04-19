@@ -13,9 +13,9 @@ from src.utils.misc import clean_print
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=("Tool to visualize coco labels. "
-                                                  "Use with 'python -m src.visualize_coco_data <path to image folder> "
-                                                  "<path to json annotation file>'"),
+    parser = argparse.ArgumentParser(description=("Tool to visualize coco keypoints labels. "
+                                                  "Use with 'python -m src.visualize_coco_keypoints - <path to json annotation file>"
+                                                  " -i <path to image folder>'"),
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--annotations_path", "-a", required=True, type=Path,
                         help="Path to the json file with the coco annotations.")
