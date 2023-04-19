@@ -24,6 +24,8 @@ numpy==1.24.2
     #   matplotlib
     #   opencv-python
     #   pycocotools
+    #   rpycocotools
+    #   rpycocotools-stubs
 opencv-python==4.7.0.72
     # via coco-utils (pyproject.toml)
 packaging==23.1
@@ -38,7 +40,13 @@ pyparsing==3.0.9
     # via matplotlib
 python-dateutil==2.8.2
     # via matplotlib
+rpycocotools==0.0.3
+    # via coco-utils (pyproject.toml)
+rpycocotools-stubs==0.0.3
+    # via rpycocotools
 six==1.16.0
     # via python-dateutil
 typing-extensions==4.5.0
-    # via pydantic
+    # via
+    #   pydantic
+    #   rpycocotools-stubs

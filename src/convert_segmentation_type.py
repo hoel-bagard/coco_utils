@@ -28,7 +28,7 @@ def main() -> None:
     args = parser.parse_args()
 
     json_path: Path = args.json_path
-    sef_format: Literal["polygon", "rle", "encoded_rle"] = args.format
+    target_format: Literal["polygon", "rle", "encoded_rle"] = args.format
     output_path: Path = args.output_path if args.output_path is not None else json_path
 
     # Load the dataset
@@ -39,28 +39,28 @@ def main() -> None:
     categories: list[Category] = coco_dataset["categories"]
 
     nb_annotations = len(annotations)
-    print(f"Loaded a json file containing {nb_annotations} annotations. Converting them to {sef_format} format.")
+    print(f"Loaded a json file containing {nb_annotations} annotations. Converting them to {target_format} format.")
     for i, annotation in enumerate(annotations):
         clean_print(f"Processing entry: ({i+1}/{nb_annotations})", end="\r" if i+1 != nb_annotations else "\n")
         assert "segmentation" in annotation, f"No segmentation found for annotation {annotation}"
         segmentation = annotation["segmentation"]
         if isinstance(segmentation, list):
-            if sef_format == "rle":
+            if target_format == "rle":
                 raise NotImplementedError("Polygons -> RLE is not implemented yet.")
-            elif sef_format == "encoded_rle":
+            elif target_format == "encoded_rle":
                 raise NotImplementedError("Polygons -> Encoded RLE is not implemented yet.")
             raise NotImplementedError("Polygon segmentation is not implemented yet.")
         else:
             if isinstance(segmentation["counts"], list):
-                if sef_format == "polygon":
+                if target_format == "polygon":
                     raise NotImplementedError("RLE -> Polygon is not implemented yet.")
-                elif sef_format == "encoded_rle":
+                elif target_format == "encoded_rle":
                     raise NotImplementedError("RLE -> Encoded RLE is not implemented yet.")
             else:
-                if sef_format == "polygon":
+                if target_format == "polygon":
                     raise NotImplementedError("Encoded RLE -> Polygon is not implemented yet.")
-                elif sef_format == "rle":
-                    rle = cvt.encoded_rle_to_rle(segmentation["counts"]).tolist()
+                elif target_format == "rle":
+                    rle = cvt.encoded_rle_to_rle(segmentation["counts"]).tolist()  # type: ignore
                     annotations[i]["segmentation"]["counts"] = rle  # type: ignore
 
     # Save the altered annotations

@@ -87,7 +87,7 @@ def main() -> None:
                     if isinstance(segmentation["counts"], list):
                         mask = rle_to_mask(segmentation["counts"], *segmentation["size"])
                     else:
-                        rle = encoded_rle_to_rle(segmentation["counts"])
+                        rle = encoded_rle_to_rle(segmentation["counts"])  # type: ignore
                         mask = rle_to_mask(rle, *segmentation["size"])
                 mask = color * np.expand_dims(mask, -1)
                 if show_individual_masks:

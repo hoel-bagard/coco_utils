@@ -14,12 +14,12 @@ classifiers = [
 ]
 license = {text = "MIT"}
 dynamic = ["version"]
-dependencies = ["opencv-python", "matplotlib", "pycocotools", "coco-types"]
+dependencies = ["opencv-python", "matplotlib", "pycocotools", "rpycocotools", "coco-types"]
 requires-python = ">=3.9"
 
 [project.optional-dependencies]
 test = ["pytest"]
-dev = ["pre-commit", "pip-tools", "ruff", "pyright", "pycocotools-stubs", "opencv-stubs"]
+dev = ["pre-commit", "pip-tools", "ruff", "pyright", "pycocotools-stubs", "opencv-stubs", "rpycocotools-stubs"]
 
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html
@@ -43,6 +43,7 @@ docstring-quotes = "double"
 
 [tool.pyright]
 include = ["src"]
+exclude = ["typings", "venv"]
 
 strictListInference = true
 strictDictionaryInference = true

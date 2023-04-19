@@ -41,6 +41,8 @@ numpy==1.24.2
     #   opencv-python
     #   opencv-stubs
     #   pycocotools
+    #   rpycocotools
+    #   rpycocotools-stubs
 opencv-python==4.7.0.72
     # via
     #   coco-utils (pyproject.toml)
@@ -77,6 +79,12 @@ python-dateutil==2.8.2
     # via matplotlib
 pyyaml==6.0
     # via pre-commit
+rpycocotools==0.0.3
+    # via coco-utils (pyproject.toml)
+rpycocotools-stubs==0.0.3
+    # via
+    #   coco-utils (pyproject.toml)
+    #   rpycocotools
 ruff==0.0.261
     # via coco-utils (pyproject.toml)
 six==1.16.0
@@ -86,7 +94,9 @@ tomli==2.0.1
     #   build
     #   pyproject-hooks
 typing-extensions==4.5.0
-    # via pydantic
+    # via
+    #   pydantic
+    #   rpycocotools-stubs
 virtualenv==20.21.0
     # via pre-commit
 wheel==0.40.0

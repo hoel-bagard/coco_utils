@@ -49,7 +49,7 @@ def main() -> None:
                 img = cv2.rectangle(img, (int(top_x), int(top_y)), (int(top_x+width), int(top_y+height)),
                                     (255, 0, 0), 5)
 
-            mask = rpycocotools.mask.decode_poly_rs(annotation.segmentation)
+            mask = rpycocotools.mask.decode(annotation.segmentation)
             mask = color * np.expand_dims(mask, -1)
             img = np.where(mask, 0.3*mask + 0.7*img, img).astype(np.uint8)
 

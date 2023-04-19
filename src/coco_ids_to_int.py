@@ -8,7 +8,7 @@ from src.types.coco_types import Annotation, Image
 
 def is_duplicate(list_to_check: list[Image] | list[Annotation], key: str, elt_id: str) -> bool:
     """Checks if the given id is already in the list."""
-    return any(entry[key] == elt_id for entry in list_to_check)
+    return any(entry[key] == elt_id for entry in list_to_check)  # pyright: ignore[reportUnknownArgumentType]
 
 
 def main() -> None:
